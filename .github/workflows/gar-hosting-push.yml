@@ -20,7 +20,7 @@ jobs:
           export_default_credentials: true
       
       - run: |
-          docker build -t us-docker.pkg.dev/als-message-banking/docker/api-dev:latest .
+          docker build -t us-docker.pkg.dev/als-message-banking/docker/api-dev:latest ./backend
           gcloud auth configure-docker --quiet
           docker push us-docker.pkg.dev/als-message-banking/docker/api-dev:latest
           gcloud run deploy api-dev \
