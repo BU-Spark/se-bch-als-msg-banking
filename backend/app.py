@@ -32,7 +32,7 @@ users_collection = db.collection('users')
 # Initialize Cloud Storage
 CLOUD_STORAGE_BUCKET_NAME = "als-audio-bucket"
 storage_client = storage.Client.from_service_account_json(
-    'serviceaccount.json')
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
 bucket = storage_client.get_bucket(CLOUD_STORAGE_BUCKET_NAME)
 
 # Helper function to check the user's token
