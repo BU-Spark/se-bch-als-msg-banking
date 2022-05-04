@@ -29,7 +29,7 @@ jobs:
           service: api-dev
           image: us-docker.pkg.dev/als-message-banking/docker/api-dev:latest 
           region: us-central1
-          env_vars: GOOGLE_APPLICATION_CREDENTIALS='${{ secrets.GOOGLE_STORAGE_SERVICE_ACCOUNT }}'
+          env_vars: GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.GOOGLE_STORAGE_SERVICE_ACCOUNT }}
           project_id: als-message-banking
 
 
