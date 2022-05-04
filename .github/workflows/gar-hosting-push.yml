@@ -1,5 +1,5 @@
 # Author: Diego
-# Modeled off example from: https://www.youtube.com/watch?v=6dLHcnlPi_U
+# Modeled off examples from: https://www.youtube.com/watch?v=6dLHcnlPi_U and https://github.com/google-github-actions/deploy-cloudrun
 name: Build and Push backend Image to GAR (Google Artifact Registry) image
 
 on: 
@@ -23,12 +23,12 @@ jobs:
           docker build -t us-docker.pkg.dev/als-message-banking/docker/api-dev:latest ./backend
           gcloud auth configure-docker us-docker.pkg.dev --quiet
           docker push us-docker.pkg.dev/als-message-banking/docker/api-dev:latest
-          gcloud run deploy api-dev \
-          --image=us-docker.pkg.dev/als-message-banking/docker/api-dev:latest \
-          --platform=managed \
-          --region=us-central1 \
-          --project=als-message-banking
-
+          
+      - uses: google-github-actions/deploy-cloudrun@v0
+        with:
+          sevice: api-dev
+          image: us-docker.pkg.dev/als-message-banking/docker/api-dev:latest 
+          region: us-central1
 
 
 

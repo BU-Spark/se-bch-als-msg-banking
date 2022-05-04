@@ -78,14 +78,16 @@ gcloud run deploy api-dev \
 
 [Click Here](https://github.com/BU-Spark/se-bch-als-msg-banking/issues) to view the list of bugs and feature suggestions.
 
-### Next Step - Enhance Audio Processing Features
+### Next Steps
 
-- Further develop the audio processing features to accommodate for slur and unclear subject voice
-  - Develop additional filters to process voice clips
-    - Setup Admins with the ability to edit voice clips
-- Synthesize voice clips
+- Develop additional audio processing features: 
+  - Background noise reduction
+  - Improve clarity of slurred subject voice
+- Other features: 
+  - User is able to delete processed files
+  - User input in trimming/splitting process
 
-### Resources Tried
-
-- Attempted to use python's noisereduce library, but the library distorsts the voice in the audio file, which affects the dead space removal functions. 
-- Dolby API imporves audio quality for processing, but requires funding. Client deciding whether they would like to use it or not. 
+### Resources Tried/General Notes
+- Deadspace trimmer/splitter uses VAD which depends on clarity of patient's voice in audio file
+- Attempted to use python's noisereduce library, but the library distorsts the voice in the audio file, which affects the dead space removal/splitter function. 
+- Dolby API improves audio quality for processing, but requires funding. Client deciding whether they would like to use it or not.
