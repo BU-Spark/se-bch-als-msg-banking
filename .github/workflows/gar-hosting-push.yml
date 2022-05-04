@@ -26,9 +26,11 @@ jobs:
           
       - uses: google-github-actions/deploy-cloudrun@v0
         with:
-          sevice: api-dev
+          service: api-dev
           image: us-docker.pkg.dev/als-message-banking/docker/api-dev:latest 
           region: us-central1
+          project_id: als-message-banking
+
 
 
 
