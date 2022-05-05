@@ -3,7 +3,7 @@
 Boston Children's Hospital ALS Message Banking Project (Double Dipping Audio Editor)
 
 Speech impairment is common in patients with ALS. The ALS Message Banking Project aims to preserve their voice and assist them with their needs.
-The platform allows the user to login to their own dashboard where they can upload and retrieve audio files securely. The project currently supports two partially implemented audio processing features (deadspace trimming and file splitting). The ultimate goal is to have several fully functional filters to enhance sound quality and be able to reuse parts of the audio clips to produce a new "voice" for the user.
+The platform allows the user to login to their own dashboard where they can upload and retrieve audio files securely. The project currently supports three implemented audio processing features (deadspace trimming, file splitting, and audio normalization). The ultimate goal is to have several fully functional filters to enhance sound quality so parts of the audio clips can be reused to produce a new "voice" for the user.
 
 ## Technical Architectures
 
@@ -32,7 +32,7 @@ Follow the steps below to run and deploy the application
 
 ### Run Frontend Locally
 
-- In client/src/components, update line 1 in settings.js so that module.exports equals 'http://localhost:8080'
+- In client/src/components, update line 1 in settings.js so that module.exports equals 'http://localhost:8080' (change it back to 'https://api-dev-z2scpwkwva-uc.a.run.app' when pushing/deploying)
 
 `npm install`
 
@@ -82,12 +82,13 @@ gcloud run deploy api-dev \
 
 - Develop additional audio processing features: 
   - Background noise reduction
-  - Improve clarity of slurred subject voice
+  - Improve the clarity of slurred subject voice
 - Other features: 
+  - Folder layout in processed files pages
   - User is able to delete processed files
   - User input in trimming/splitting process
 
 ### Resources Tried/General Notes
-- Deadspace trimmer/splitter uses VAD which depends on clarity of patient's voice in audio file
-- Attempted to use python's noisereduce library, but the library distorsts the voice in the audio file, which affects the dead space removal/splitter function. 
-- Dolby API improves audio quality for processing, but requires funding. Client deciding whether they would like to use it or not.
+- Deadspace removal/splitter uses VAD which depends on the clarity of the patient's voice in the audio file
+- Attempted to use python's noisereduce library for background noise, but the library distorsts the voice in the audio file, which affects the dead space removal/splitter function. 
+- Dolby API has superior background noise reduction capabilities, but requires funding. Client is deciding whether they would like to use it or not.
