@@ -3,7 +3,7 @@
 Boston Children's Hospital ALS Message Banking Project (Double Dipping Audio Editor)
 
 Speech impairment is common in patients with ALS. The ALS Message Banking Project aims to preserve their voice and assist them with their needs.
-The platform allows the user to login to their own dashboard where they can upload and retrieve audio files securely. The project currently supports two partially implemented audio processing features (deadspace trimming and file splitting). The ultimate goal is to have several fully functional filters to enhance sound quality and be able to reuse parts of the audio clips to produce a new "voice" for the user.
+The platform allows the user to login to their own dashboard where they can upload and retrieve audio files securely. The project currently supports three implemented audio processing features (deadspace trimming, file splitting, and audio normalization). The ultimate goal is to have several fully functional filters to enhance sound quality so parts of the audio clips can be reused to produce a new "voice" for the user.
 
 ## Technical Architectures
 
@@ -32,7 +32,7 @@ Follow the steps below to run and deploy the application
 
 ### Run Frontend Locally
 
-- In client/src/components, update line 1 in settings.js so that module.exports equals 'http://localhost:8080'
+- In client/src/components, update line 1 in settings.js so that module.exports equals 'http://localhost:8080' (change it back to 'https://api-dev-z2scpwkwva-uc.a.run.app' when pushing/deploying)
 
 `npm install`
 
@@ -60,7 +60,19 @@ docker run --env GOOGLE_APPLICATION_CREDENTIALS='./serviceaccount.json' -p 8080:
 
 ### To Deploy Backend
 
-Backend is deployed to GCP. After authenticating docker to push to the private docker repository, run the following commands to deploy the API.
+- Note: Incomplete GAR workflow file needs edits for functional CD
+
+- Backend is deployed to GCP on the Google Artifact Registry using a Docker repo
+
+- Set up authentication with docker using the gcloud credential helper as described here - <https://cloud.google.com/artifact-registry/docs/docker/authentication>
+
+run this config command when deploying for the first time.
+
+```bash
+gcloud auth configure-docker us-docker.pkg.dev
+```
+
+then run the following commands to deploy the API.
 
 ```bash
 docker build -t us-docker.pkg.dev/als-message-banking/docker/api-dev:latest .
@@ -72,20 +84,31 @@ gcloud run deploy api-dev \
 --project=als-message-banking
 ```
 
+## Additional Info (Audio Processing)
+
+### Resources Tried/General Notes:
+- The currently implemented processing functions only work with files converted to mono (use pyDub)
+- Deadspace trimmer/splitter:
+  - uses VAD which relies on the clarity of the patient's voice in the audio file
+  - "padding_duration_ms" value in the "vad_collector" function call decides how much silence is allowed between each word in a sentence 
+    - greater values mean more leniency is given for pauses between words 
+- Background noise reduction:
+  - Attempted to use python's noisereduce library for background noise, but the library distorsts the voice in the audio file, which affects the dead space trimmer/splitter function.
+  - Dolby API has superior background noise reduction capabilities, but requires funding. Client is deciding whether they would like to use it or not.
+
 ## Known Bugs and Future Steps
 
 ### Issues
 
 [Click Here](https://github.com/BU-Spark/se-bch-als-msg-banking/issues) to view the list of bugs and feature suggestions.
 
-### Next Step - Enhance Audio Processing Features
+### Next Steps
 
-- Further develop the audio processing features to accommodate for slur and unclear subject voice
-  - Develop additional filters to process voice clips
-    - Setup Admins with the ability to edit voice clips
-- Synthesize voice clips
+- Develop additional audio processing features: 
+  - Background noise reduction
+  - Improve the clarity of slurred subject voice
+- Other features: 
+  - Folder layout in processed files pages
+  - User is able to delete processed files
+  - User input in trimming/splitting process
 
-### Resources Tried
-
-- Attempted to use python's noisereduce library, but the library distorsts the voice in the audio file, which affects the dead space removal functions. 
-- Dolby API imporves audio quality for processing, but requires funding. Client deciding whether they would like to use it or not. 
