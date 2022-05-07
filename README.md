@@ -60,7 +60,19 @@ docker run --env GOOGLE_APPLICATION_CREDENTIALS='./serviceaccount.json' -p 8080:
 
 ### To Deploy Backend
 
-Backend is deployed to GCP. After authenticating docker to push to the private docker repository, run the following commands to deploy the API.
+- Note: Incomplete GAR workflow file needs edits for functional CD
+
+- Backend is deployed to GCP on the Google Artifact Registry using a Docker repo
+
+- Set up authentication with docker using the gcloud credential helper as described here - <https://cloud.google.com/artifact-registry/docs/docker/authentication>
+
+run this config command when deploying for the first time.
+
+```bash
+gcloud auth configure-docker us-docker.pkg.dev
+```
+
+then run the following commands to deploy the API.
 
 ```bash
 docker build -t us-docker.pkg.dev/als-message-banking/docker/api-dev:latest .
@@ -71,6 +83,18 @@ gcloud run deploy api-dev \
 --region=us-central1 \
 --project=als-message-banking
 ```
+
+## Additional Info (Audio Processing)
+
+### Resources Tried/General Notes:
+- The currently implemented processing functions only work with files converted to mono (use pyDub)
+- Deadspace trimmer/splitter:
+  - uses VAD which relies on the clarity of the patient's voice in the audio file
+  - "padding_duration_ms" value in the "vad_collector" function call decides how much silence is allowed between each word in a sentence 
+    - greater values mean more leniency is given for pauses between words 
+- Background noise reduction:
+  - Attempted to use python's noisereduce library for background noise, but the library distorsts the voice in the audio file, which affects the dead space trimmer/splitter function.
+  - Dolby API has superior background noise reduction capabilities, but requires funding. Client is deciding whether they would like to use it or not.
 
 ## Known Bugs and Future Steps
 
@@ -88,7 +112,3 @@ gcloud run deploy api-dev \
   - User is able to delete processed files
   - User input in trimming/splitting process
 
-### Resources Tried/General Notes
-- Deadspace removal/splitter uses VAD which depends on the clarity of the patient's voice in the audio file
-- Attempted to use python's noisereduce library for background noise, but the library distorsts the voice in the audio file, which affects the dead space removal/splitter function. 
-- Dolby API has superior background noise reduction capabilities, but requires funding. Client is deciding whether they would like to use it or not.
