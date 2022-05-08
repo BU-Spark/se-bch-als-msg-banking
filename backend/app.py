@@ -125,10 +125,10 @@ def upload_audio():
         # uploads each processed file name/path to firebase
         for (procfileName, destprocFile, folderid) in firebaseEntries:
             if "audio" in doc:
-                doc["audio"].append({(procfileName): (destprocFile,folderid)})
+                doc["audio"].append({procfileName: destprocFile})
                 user_ref.update({"audio": doc["audio"]})
             else:
-                user_ref.update({"audio": [{(procfileName): (destprocFile,folderid)}]})
+                user_ref.update({"audio": [{procfileName: destprocFile}]})
                 doc = user_ref.get()
                 doc = doc.to_dict()
 
