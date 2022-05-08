@@ -1,0 +1,41 @@
+# # Author: Diego
+# # Modeled off examples from: https://www.youtube.com/watch?v=6dLHcnlPi_U and https://github.com/google-github-actions/deploy-cloudrun
+# name: Build and Push backend Image to GAR (Google Artifact Registry) image
+
+# on: 
+#   push:
+#     branches:
+#       - main
+#       - dev
+
+# jobs:
+#   gar-push:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v3
+
+#       - id: 'auth'
+#         uses: 'google-github-actions/auth@v0'
+#         with:
+#           credentials_json: '${{ secrets.GAR_SERVICE_ACCOUNT_KEY }}'
+      
+#       - run: |
+#           docker build -t us-docker.pkg.dev/als-message-banking/docker/api-dev:latest ./backend
+#           gcloud auth configure-docker us-docker.pkg.dev --quiet
+#           docker push us-docker.pkg.dev/als-message-banking/docker/api-dev:latest
+          
+#       - uses: google-github-actions/deploy-cloudrun@v0
+#         with:
+#           service: api-dev
+#           image: us-docker.pkg.dev/als-message-banking/docker/api-dev:latest 
+#           region: us-central1
+#           env_vars: GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.GOOGLE_STORAGE_SERVICE_ACCOUNT }}
+#           project_id: als-message-banking
+
+
+
+
+      
+
+    
+
