@@ -60,7 +60,7 @@ docker run --env GOOGLE_APPLICATION_CREDENTIALS='./serviceaccount.json' -p 8080:
 
 ### To Deploy Backend
 
-- Note: Incomplete GAR workflow file needs edits for functional CD
+- Note: Incomplete GAR workflow file needs edits for functional CD, needs to provide serviceaccount.json access to docker container somewhow
 
 - Backend is deployed to GCP on the Google Artifact Registry using a Docker repo
 
