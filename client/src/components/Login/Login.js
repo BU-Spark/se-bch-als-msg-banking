@@ -20,6 +20,7 @@ function Login() {
       return;
     }
     if (user) history.replace(process.env.PUBLIC_URL + "/dashboard");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, loading]);
   return (
     <>

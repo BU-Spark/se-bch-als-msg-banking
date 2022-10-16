@@ -78,10 +78,11 @@ function showLoading() {
   document.body.appendChild(frame);
   var wait = 0;
   var dots = document.getElementsByClassName("loading-dot");
-  for (var i = 0; i < dots.length; i++) {
+  // There was a warning i is already defined, thus use j for index instead.
+  for (var j = 0; j < dots.length; j++) {
     window.setTimeout(function(dot) {
       dot.classList.add("loading-dot-animated");
-    }, wait, dots[i]);
+    }, wait, dots[j]);
     wait += 150;
   }
 };
@@ -108,6 +109,7 @@ function Upload() {
       return;
     }
     if (!user) history.replace("/home");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, loading]);
   const submitAudio = async (event) => {
     event.preventDefault();
