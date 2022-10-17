@@ -104,7 +104,7 @@ function Upload() {
   const [uploadedFiles, setUploadedFiles] = useState([]); // This is the array of files that have been uploaded.
   const [title] = React.useState();
   const history = useHistory();
-
+  const [uploadedSuccessfully, setUploadedSuccessfully] = useState(false);
   useEffect(() => {
     if (loading) {
       // maybe trigger a loading screen
@@ -116,24 +116,26 @@ function Upload() {
   
   // Select audio file to upload.
   const submitAudios = async (files) => {
-    let formData = new FormData();
     //for each file in the array of files, asynchronously upload the file to the server.
     const token = await auth.currentUser.getIdToken();
     showLoading();
+    let formData = new FormData();
+    // wait till all files are appended to the form data before sending it to the server.
     for (let i = 0; i < files.length; i++) {
       formData.append("file", files[i]);
-      formData.append("title", title);
-      await axios.post(url + "/upload_audio", formData, {
+    }
+    await axios.post(url + "/upload_audio", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: token,
         },
       }).then((res) => {
         console.log(res);
+        setUploadedSuccessfully(true);
       }).catch((err) => {
         console.log(err);
       });
-    }
+      console.log(formData);
     removeLoading();
   };
   const handleFileEvent = (e) => {
@@ -143,9 +145,7 @@ function Upload() {
   const handleUploadFiles = (files) => {
     const uploaded = [...uploadedFiles];
     files.some((file) => {
-      console.log(file)
       if (uploaded.findIndex((f) => f.name === file.name) === -1) {
-        console.log(file)
         uploaded.push(file);
       }
     });
@@ -178,6 +178,19 @@ function Upload() {
               </tr>
             </thead>
             <tbody>
+              {uploadedSuccessfully ?
+              <>
+              {uploadedFiles.map((file, index) => (
+                <tr key={index} className='submittedItem'>
+                  <td>{file.name}</td>
+                  <td>{file.size}</td>
+                  <td>{file.lastModifiedDate.toLocaleDateString()}</td>
+                  <td>{file.type}</td>
+                </tr>
+              ))}
+              </>
+              :
+              <>
               {uploadedFiles.map((file, index) => (
                 <tr key={index}>
                   <td>{file.name}</td>
@@ -186,9 +199,11 @@ function Upload() {
                   <td>{file.type}</td>
                 </tr>
               ))}
+              </>
+              }
             </tbody>
           </table>
-          <button id='submitButton' onClick={(e) => {e.preventDefault();submitAudios(uploadedFiles); return false;}}>Upload</button>
+          <button id='submitButton' onClick={(e) => {e.preventDefault(); submitAudios(uploadedFiles); return false;}}>Upload</button>
           </>
           :
           <>

@@ -66,7 +66,7 @@ function Retrieve() {
       <h1 className="dashboard-header text-center">Rediscover Your Voice</h1>
       <h2 className="dashboard-header text-center">Click to Download!</h2>
       <br />
-      <div class="col-md-12 text-center">{audioList}</div>
+      <div className="col-md-12 text-center">{audioList}</div>
     </>
   );
 }

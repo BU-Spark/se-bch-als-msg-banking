@@ -28,3 +28,6 @@ table tr.header, table tr:hover {
     background-color: #45a049;
     color: white;
 }
+.submittedItem {
+    background-color: #45a049;
+}
