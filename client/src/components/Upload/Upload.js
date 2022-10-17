@@ -124,19 +124,24 @@ function Upload() {
     for (let i = 0; i < files.length; i++) {
       formData.append("file", files[i]);
     }
-    await axios.post(url + "/upload_audio", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: token,
-        },
-      }).then((res) => {
-        console.log(res);
-        setUploadedSuccessfully(true);
-      }).catch((err) => {
-        console.log(err);
-      });
-      console.log(formData);
-    removeLoading();
+
+    await axios({
+      method: "post",
+      url: url + "/upload_audio",
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: token,
+      }
+    }).then((res) => {
+      // if the upload was successful, set the uploadedFiles array to the response data.
+      console.log(res.data);
+      setUploadedSuccessfully(true);
+      removeLoading();
+    }).catch((err) => {
+      console.log(err);
+      removeLoading();
+    });
   };
   const handleFileEvent = (e) => {
     const chosenFiles = Array.prototype.slice.call(e.target.files); // This is the array of files that have been chosen.
