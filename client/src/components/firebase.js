@@ -3,6 +3,7 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import axios from "axios";
+import { sendEmailVerification } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBsq899DDVYofdoPCf2bqVBwHw_lvhejyE",
@@ -24,6 +25,11 @@ const facebookProvider = new firebase.auth.FacebookAuthProvider();
 const signInWithEmailAndPassword = async (email, password) => {
   try {
     await auth.signInWithEmailAndPassword(email, password);
+    console.log('emailVerified:', auth.currentUser.emailVerified)
+    if (!auth.currentUser.emailVerified) {
+      logout();
+      alert('Email not verified.');
+    }
   } catch (err) {
     console.error(err);
     alert(err.message);
@@ -33,6 +39,10 @@ const signInWithEmailAndPassword = async (email, password) => {
 const registerWithEmailAndPassword = async (name, email, password) => {
   try {
     const res = await auth.createUserWithEmailAndPassword(email, password);
+    await sendEmailVerification(auth.currentUser);
+    logout();
+    alert('Please verify your email address via the link sent to your email (check spam as well).')
+
     res.user.getIdTokenResult().then(async (idTokenResult) => {
       const user = res.user;
       const token = "Bearer " + idTokenResult.token;
