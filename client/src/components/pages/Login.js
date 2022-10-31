@@ -28,7 +28,7 @@ function Login() {
       </div>
       <div className="login">
         <div className="login__container">
-          <input
+          {/* <input
             type="text"
             className="login__textBox"
             value={email}
@@ -47,14 +47,14 @@ function Login() {
             onClick={() => signInWithEmailAndPassword(email, password)}
           >
             Login
-          </button>
+          </button> */}
           <button
             className="login__btn login__google"
             onClick={signInWithGoogle}
           >
             Login with Google
           </button>
-          <button
+          {/* <button
             className="login__btn login__facebook"
             onClick={signInWithFacebook}
             style={{ textDecoration: "line-through" }}
@@ -67,7 +67,7 @@ function Login() {
           <div>
             Don't have an account? Click here to{" "}
             <Link to={process.env.PUBLIC_URL + "/register"}>Register</Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </>
