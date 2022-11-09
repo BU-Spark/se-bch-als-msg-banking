@@ -175,10 +175,10 @@ def upload_audios():
                 blob = bucket.blob(dest_processed_file)
                 blob.upload_from_filename(path, content_type='audio/wav')
                 if "audio" in doc:
-                    doc["audio"].append({processedFileName: dest_processed_file})
+                    doc["audio"].append({processedFileName: destination_file_name, "processed": {dest_processed_file}})
                     user_ref.update({"audio": doc["audio"]})
                 else:
-                    user_ref.update({"audio": [{processedFileName: dest_processed_file}]})
+                    user_ref.update({"audio": [{processedFileName: destination_file_name, "processed "+ destination_file_name: {dest_processed_file}}]})
                     doc = user_ref.get()
                     doc = doc.to_dict()
             # if "audio" in doc:
