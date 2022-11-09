@@ -158,6 +158,7 @@ function Upload() {
       setUploadedSuccessfully(true);
       removeLoading();
     }).catch((err) => {
+      setUploadedSuccessfully(false);
       console.log(err);
       removeLoading();
     });
