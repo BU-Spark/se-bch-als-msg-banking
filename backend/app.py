@@ -153,6 +153,9 @@ def upload_audios():
     idtoken = auth_header.split(' ').pop()
     claims = id_token.verify_firebase_token(
         idtoken, HTTP_REQUEST, audience=os.environ.get('GOOGLE_CLOUD_PROJECT'))
+    # check if claims is None
+    if not claims:
+        return 'Unauthorized', 401
     user_ref = users_collection.document(claims['sub'])
     doc = user_ref.get()
     if doc.exists:
