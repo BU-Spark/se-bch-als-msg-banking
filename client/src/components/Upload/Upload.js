@@ -121,9 +121,7 @@ function Upload() {
     showLoading();
     let formData = new FormData();
     // wait till all files are appended to the form data before sending it to the server.
-    for (let i = 0; i < files.length; i++) {
-      formData.append("file", files[i]);
-    }
+    files.forEach((f) => formData.append("file", f));
     // if multiple audios, else single audio file
     if (files.length == 1) {
       console.log('Uploaded One File');
