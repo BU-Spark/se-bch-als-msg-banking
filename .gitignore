@@ -3,5 +3,6 @@
 */env
 */__pycache__
 */tmp
-
+package-lock.json
+settings.js
 serviceaccount.json
