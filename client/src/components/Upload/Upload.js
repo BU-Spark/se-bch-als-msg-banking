@@ -4,7 +4,7 @@ import { useHistory } from "react-router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./Upload.css"
+import "./Upload.css";
 const url=require('../settings')
 
 // Loading Wheel Functions are from: https://stackoverflow.com/questions/19315149/implementing-a-loading-spinning-wheel-in-javascript
@@ -111,7 +111,6 @@ function Upload() {
       return;
     }
     if (!user) history.replace("/home");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, loading]);
   
   // Select audio file to upload.
@@ -121,10 +120,10 @@ function Upload() {
     showLoading();
     let formData = new FormData();
     // wait till all files are appended to the form data before sending it to the server.
-    for (let i = 0; i < files.length; i++) {
-      formData.append("file", files[i]);
-    }
-
+    files.forEach((f) => formData.append("file", f));
+    // if multiple audios, else single audio file
+    if (files.length == 1) {
+      console.log('Uploaded One File');
     await axios({
       method: "post",
       url: url + "/upload_audio",
@@ -142,6 +141,29 @@ function Upload() {
       console.log(err);
       removeLoading();
     });
+  } else {
+    console.log('Uploaded Multiple Files');
+    await axios({
+      method: "post",
+      url: url + "/upload_audios",
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: token,
+      }
+    }).then((res) => {
+      // if the upload was successful, set the uploadedFiles array to the response data.
+      console.log(res.data);
+      setUploadedSuccessfully(true);
+      removeLoading();
+    }).catch((err) => {
+      setUploadedSuccessfully(false);
+      console.log(err);
+      removeLoading();
+    });
+  }
+
+
   };
   const handleFileEvent = (e) => {
     const chosenFiles = Array.prototype.slice.call(e.target.files); // This is the array of files that have been chosen.
