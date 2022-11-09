@@ -70,7 +70,7 @@ def register():
     if user_snapshot.exists:
         return {'message': 'User already exists'}, 400
     user_ref.set(data)
-    return {'message': 'User created successfully'}, 200
+    return {'message': data}, 200
 
 # "Login" a user
 
