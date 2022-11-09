@@ -124,7 +124,9 @@ function Upload() {
     for (let i = 0; i < files.length; i++) {
       formData.append("file", files[i]);
     }
-
+    // if multiple audios, else single audio file
+    if (files.length == 1) {
+      console.log('Uploaded One File');
     await axios({
       method: "post",
       url: url + "/upload_audio",
@@ -142,6 +144,28 @@ function Upload() {
       console.log(err);
       removeLoading();
     });
+  } else {
+    console.log('Uploaded Multiple Files');
+    await axios({
+      method: "post",
+      url: url + "/upload_audios",
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: token,
+      }
+    }).then((res) => {
+      // if the upload was successful, set the uploadedFiles array to the response data.
+      console.log(res.data);
+      setUploadedSuccessfully(true);
+      removeLoading();
+    }).catch((err) => {
+      console.log(err);
+      removeLoading();
+    });
+  }
+
+
   };
   const handleFileEvent = (e) => {
     const chosenFiles = Array.prototype.slice.call(e.target.files); // This is the array of files that have been chosen.
