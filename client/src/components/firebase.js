@@ -49,7 +49,8 @@ const registerWithEmailAndPassword = async (name, email, password) => {
       console.log(token);
       const response = await axios.post(
         "https://api-dev-z2scpwkwva-uc.a.run.app/register",
-        {
+        { 
+          audio: [],
           uid: user.uid,
           name: name,
           authProvider: "email",
