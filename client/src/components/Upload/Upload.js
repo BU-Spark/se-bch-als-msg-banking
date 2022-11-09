@@ -4,7 +4,7 @@ import { useHistory } from "react-router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./Upload.css"
+import "./Upload.css";
 const url=require('../settings')
 
 // Loading Wheel Functions are from: https://stackoverflow.com/questions/19315149/implementing-a-loading-spinning-wheel-in-javascript
@@ -111,7 +111,6 @@ function Upload() {
       return;
     }
     if (!user) history.replace("/home");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, loading]);
   
   // Select audio file to upload.

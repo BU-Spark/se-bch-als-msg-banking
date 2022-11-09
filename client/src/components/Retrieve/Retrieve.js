@@ -30,7 +30,6 @@ function Retrieve() {
     if (loading) return;
     if (!user) return history.replace(process.env.PUBLIC_URL + "/");
     fetchUserAudio();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
   const downloadClip = async (name) => {
     try {
