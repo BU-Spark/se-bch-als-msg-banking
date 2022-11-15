@@ -10,25 +10,32 @@ function Dashboard() {
   const [user, loading] = useAuthState(auth);
   const [name, setName] = useState("");
   const history = useHistory();
-  const fetchUserName = async () => {
-    try {
-      const query = await db
-        .collection("users")
-        .where("uid", "==", user?.uid)
-        .get();
-      if (query.docs.length > 0) {
-        const data = await query.docs[0].data();
-        setName(data.name);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+
   useEffect(() => {
     if (loading) return;
-    if (!user) return history.replace(process.env.PUBLIC_URL + "/");
+    if (!user){
+      return history.replace(process.env.PUBLIC_URL + "/");
+    }
+
+    const fetchUserName = async () => {
+      try {
+        const query = await db
+          .collection("users")
+          .where("uid", "==", user?.uid)
+          .get();
+        if (query.docs.length > 0) {
+          const data = await query.docs[0].data();
+          setName(data.name);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
     fetchUserName();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, loading]);
+
+
   return (
     <>
       <h1 className="dashboard-header text-center">Rediscover Your Voice</h1>

@@ -13,6 +13,7 @@ function Reset() {
   useEffect(() => {
     if (loading) return;
     if (user) history.replace("/dashboard");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, loading]);
   return (
     <div className="reset">

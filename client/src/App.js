@@ -1,12 +1,12 @@
 import "./App.css";
 import MainNav from "./components/Navbar";
-import Home from "./components/pages/Home";
-import Upload from "./components/pages/Upload";
-import Dashboard from "./components/pages/Dashboard";
-import Login from "./components/pages/Login";
-import Register from "./components/pages/Register";
-import Reset from "./components/pages/Reset";
-import Retrieve from "./components/pages/Retrieve";
+import Home from "./components/Home/Home";
+import Upload from "./components/Upload/Upload";
+import Dashboard from "./components/Dashboard/Dashboard";
+import Login from "./components/Login/Login";
+import Register from "./components/Register/Register";
+import Reset from "./components/Reset/Reset";
+import Retrieve from "./components/Retrieve/Retrieve";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
