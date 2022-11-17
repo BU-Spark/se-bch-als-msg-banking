@@ -16,6 +16,11 @@ jobs:
   
     steps: 
       - uses: actions/checkout@v2
+      
+      - name: npm install and build
+        run: |
+          npm install
+      
       - uses: actions/setup-node@v2
   
       - name: tests
