@@ -21,7 +21,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts jest",
+    "test": "jest --env=jsdom --colors --coverage test",
     "jest": "jest --env=jsdom --colors --coverage test",
     "eject": "react-scripts eject"
   },
