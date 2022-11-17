@@ -23,5 +23,5 @@ jobs:
         
   
       - name: tests
-        working-directory: client
+        working-directory: ./client
         run: npm test
