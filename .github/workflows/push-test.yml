@@ -13,8 +13,11 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
-
+  
     steps: 
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
       - uses: actions/checkout@v2
       - name: tests
         working-directory: client
