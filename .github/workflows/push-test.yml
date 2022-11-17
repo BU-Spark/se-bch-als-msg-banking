@@ -17,5 +17,4 @@ jobs:
     steps: 
       - uses: actions/checkout@v2
       - name: tests
-      - working-directory: ./client
         run: npx jest
