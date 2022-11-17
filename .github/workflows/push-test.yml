@@ -15,5 +15,5 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      -name: tests
+      - name: tests
         run: npm jest
