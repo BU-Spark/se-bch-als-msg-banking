@@ -12,17 +12,18 @@ on:
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
   
     steps: 
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       
-      - name: npm install and build
+      - name: Set up Node.js version
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.x'
+      
+      - name: npm install, build, and test
         run: |
           npm install
-      
-      - uses: actions/setup-node@v2
-  
-      - name: tests
-        working-directory: ./client
-        run: npm test
+          npm run build --if-present
+          npm run test --if-present
