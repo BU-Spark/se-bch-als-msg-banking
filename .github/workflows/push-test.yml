@@ -1,0 +1,52 @@
+# Author: Haowei Li
+# (It seems like a trend for yml that people put names, so I do it too)
+
+# The purpose of this yml file is to run some tests on the client to see if everything runs as supposed to
+# client is based on React.JS
+
+on:
+  push:
+    branches:
+       - main
+       - dev
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: '${{ secrets.GAR_SERVICE_ACCOUNT_KEY }}'
+      
+    - run: |
+        docker build -t us-docker.pkg.dev/als-message-banking/docker/api-dev:latest ./backend
+        gcloud auth configure-docker us-docker.pkg.dev --quiet
+        docker push us-docker.pkg.dev/als-message-banking/docker/api-dev:latest
+          
+    - uses: google-github-actions/deploy-cloudrun@v0
+      with:
+        service: api-dev
+        image: us-docker.pkg.dev/als-message-banking/docker/api-dev:latest 
+        region: us-central1
+        env_vars: GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.GOOGLE_STORAGE_SERVICE_ACCOUNT }}
+        project_id: als-message-banking
+
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Use Node.js LTS
+      uses: actions/setup-node@v1
+      with:
+        node-version: '16.x'
+    - uses: bahmutov/npm-install@v1
+      with:
+        install-command: yarn --immutable
+    - name: Unit Tests
+      run: make test-unit
+      env:
+        CI: true
