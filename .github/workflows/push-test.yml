@@ -34,19 +34,3 @@
 #         env_vars: GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.GOOGLE_STORAGE_SERVICE_ACCOUNT }}
 #         project_id: als-message-banking
 
-#   unit-test:
-#     runs-on: ubuntu-latest
-#     steps:
-#     - name: Checkout
-#       uses: actions/checkout@v2
-#     - name: Use Node.js LTS
-#       uses: actions/setup-node@v1
-#       with:
-#         node-version: '16.x'
-#     - uses: bahmutov/npm-install@v1
-#       with:
-#         install-command: yarn --immutable
-#     - name: Unit Tests
-#       run: make test-unit
-#       env:
-#         CI: true
