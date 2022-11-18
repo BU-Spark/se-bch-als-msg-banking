@@ -64,10 +64,12 @@
     "moduleNameMapper": {
       "\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/mocks/fileMock.js",
       "\\.(css|less)$": "<rootDir>/src/mocks/fileMock.js",
-      "../firebase": "<rootDir>/src/components/firebase.js"
+      "../firebase": "<rootDir>/src/components/firebase.js",
+      "http://localhost/index.node.cjs.js": "<rootDir>/node_modules/@firebase/firestore/src/platform/node/grpc_connection.ts"
     },
     "transformIgnorePatterns": [
       "<rootDir>/node_modules/(?!firebase)",
+      "http://localhost/index.node.cjs.js",
       "node_modules"
     ]
   }
