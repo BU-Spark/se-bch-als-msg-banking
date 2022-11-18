@@ -27,7 +27,6 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          npm install -g jest
-          npm install --save-dev jest-environment-jsdom
-          npm install --save-dev jest-jasmine2
+          npm install -g jest@^6.14.13
+          npm install -g jest-environment-jsdom@^6.14.13
           npm test
