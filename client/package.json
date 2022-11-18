@@ -46,8 +46,7 @@
   "devDependencies": {
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.7",
-    "regenerator-runtime": "^0.13.10",
-    "jest": "^6.14.13"
+    "regenerator-runtime": "^0.13.10"
   },
   "babel": {
     "presets": [
