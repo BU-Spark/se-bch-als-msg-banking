@@ -27,6 +27,6 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          npm install jest@6.14.13
-          npm install jest-environment-jsdom@6.14.13
+          npm install jest@29.3.1
+          npm install jest-environment-jsdom@29.3.1
           npm test
