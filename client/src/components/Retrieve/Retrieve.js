@@ -44,8 +44,29 @@ function Retrieve() {
       console.log(err);
     }
   };
+  const deleteClip = async (fireStoreFilename, cloudStorageFileName) => {
+    try {
+      console.log('called deleteClip...')
+      const token = await auth.currentUser.getIdToken();
+      const response = await axios.delete(
+        (url+"/delete_audio"),
+        {
+          'data': {
+            'fireStoreFilename': fireStoreFilename,
+            'cloudStorageFileName': cloudStorageFileName,
+            'Authorization': token
+          }
+        }
+      );
+      console.log('Response from delete audio:');
+      console.log(response)
+    } catch (err) {
+      console.log(err);
+    }
+  };
   var audioList = audio.map((value) => {
     const res = Object.entries(value);
+    console.log(`res: ${res}`);
     console.log(res);
     return (
       <div>
@@ -65,6 +86,7 @@ function Retrieve() {
       <h1 className="dashboard-header text-center">Rediscover Your Voice</h1>
       <h2 className="dashboard-header text-center">Click to Download!</h2>
       <br />
+      <button onClick={() => deleteClip('testEditedchunk-0.WAV', 'Audiodbdd10e0-6088-11ed-b642-df8bb8090224.wav')}>test button</button>
       <div className="col-md-12 text-center">{audioList}</div>
     </>
   );

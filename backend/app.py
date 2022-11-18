@@ -191,7 +191,42 @@ def retrieve_audio():
     print("Generated GET signed URL:")
     return url
 
+@app.route('/delete_audio', methods=['DELETE'])
+def delete_audio():
+    try:
+        app.logger.info("logging working")
+        cloud_storage_filename = request.json['cloudStorageFileName']
+        
+        # delete the audio from cloud storage
+        blob = bucket.blob(cloud_storage_filename)
+        blob.delete()
 
+        # delete the audio from firebase
+        # firestore_filename = request.json['fireStoreFilename']
+        auth_header = request.json['Authorization']
+        idtoken = auth_header.split(' ').pop()
+        claims = id_token.verify_firebase_token(
+            idtoken, HTTP_REQUEST, audience=os.environ.get('GOOGLE_CLOUD_PROJECT'))
+        user_ref = users_collection.document(claims['sub'])
+
+        doc = user_ref.get()
+        if doc.exists:        
+            doc = doc.to_dict()
+            new_audios = []
+            for audio in doc["audio"]:
+                if list(audio.values())[0] != cloud_storage_filename:
+                    new_audios.append(audio)
+            user_ref.update({'audio': new_audios})
+            return doc
+
+        else:
+            print(u'No such document!')
+
+    except Exception as e:
+        app.logger.error('THERE IS AN EXCEPTION:', str(e))
+        return str(e)
+
+    
 port = int(os.environ.get('PORT', 8080))
 if __name__ == '__main__':
-    app.run(threaded=True, host='0.0.0.0', port=port)
+    app.run(threaded=True, host='0.0.0.0', port=port, debug=True)
