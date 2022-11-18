@@ -28,5 +28,6 @@ jobs:
         run: |
           npm install
           npm install -g jest
-          npm install -D jest-environment-jsdom
+          npm install --save-dev jest-environment-jsdom
+          npm install --save-dev jest-jasmine2
           npm test
