@@ -3,6 +3,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useHistory } from "react-router";
 import { auth, db } from "../firebase";
 import axios from "axios";
+import "./Retrieve.css";
 const url=require('../settings')
 
 function Retrieve() {
@@ -68,19 +69,54 @@ function Retrieve() {
     const res = Object.entries(value);
     console.log(`res: ${res}`);
     console.log(res);
-    return (
-      <div>
-        <button
-          className="align-center mt-2"
-          key="{res}"
-          onClick={() => downloadClip(res[0][1])}
-        >
-          {res[0][0]}
-        </button>
-        <br />
-      </div>
-    );
+    if(res[1][0] === "processed"){
+      return (
+        <div>
+          <div className="original-audio">
+            <div>{res[0][0]}</div>
+            <div>{res[0][1]}</div>
+            <button onClick={() => downloadClip(res[0][1])}>Download</button>
+          </div>
+          <div className="processed-audio">
+            <div>{res[1][0]}</div>
+            <div>{showList(res[1][1])}</div>
+          </div>
+        </div>
+      );
+    }
+    else {
+      return (
+        <div>
+          <div className="original-audio">
+            <div>{res[1][0]}</div>
+            <div>{res[1][1]}</div>
+            <button onClick={() => downloadClip(res[1][1])}>Download</button>
+          </div>
+          <div className="processed-audio">
+            <div><p>{res[0][0]}</p></div>
+            <div className="processed-audio-list">{showList(res[0][1])}</div>
+          </div>
+        </div>
+      );
+    }
+    
+  //   <div className="download-btn">
+  //   <button onClick={() => downloadClip(res[0][1])}>Download</button>
+  // </div>
   });
+  function showList(list) {
+    // return a list of divs, that contain the audio file
+    var list = list.map((value) => {
+      return (
+        <div className="processed-clip-div">
+          <div className="processed-clip">{value}</div>
+          <button onClick={() => downloadClip(value)}>Download</button>
+        </div>
+      );
+    });
+    return list;
+  }
+
   return (
     <>
       <h1 className="dashboard-header text-center">Rediscover Your Voice</h1>

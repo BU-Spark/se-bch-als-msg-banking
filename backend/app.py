@@ -70,7 +70,7 @@ def register():
     if user_snapshot.exists:
         return {'message': 'User already exists'}, 400
     user_ref.set(data)
-    return {'message': 'User created successfully'}, 200
+    return {'message': data}, 200
 
 # "Login" a user
 
@@ -164,11 +164,28 @@ def upload_audios():
             destination_file_name = f'Audio{uuid.uuid1()}.wav'
             blob = bucket.blob(destination_file_name)
             blob.upload_from_string(file.read(), content_type=file.content_type)
-            if "audio" in doc:
-                doc["audio"].append({file.filename: destination_file_name})
-                user_ref.update({"audio": doc["audio"]})
-            else:
-                user_ref.update({"audio": [{file.filename: destination_file_name}]})
+            # process audio
+            file_path = '/tmp/' + str(file.filename)
+            blob.download_to_filename(file_path)
+            processedFilePaths = processAudio(file_path)
+            # upload processed audio
+            for path in processedFilePaths:
+                dest_processed_file = f'Audio{uuid.uuid1()}.wav'
+                processedFileName = path.split('/tmp/')[1]
+                blob = bucket.blob(dest_processed_file)
+                blob.upload_from_filename(path, content_type='audio/wav')
+                if "audio" in doc:
+                    doc["audio"].append({processedFileName: destination_file_name, "processed": {dest_processed_file}})
+                    user_ref.update({"audio": doc["audio"]})
+                else:
+                    user_ref.update({"audio": [{processedFileName: destination_file_name, "processed "+ destination_file_name: {dest_processed_file}}]})
+                    doc = user_ref.get()
+                    doc = doc.to_dict()
+            # if "audio" in doc:
+            #     doc["audio"].append({file.filename: destination_file_name})
+            #     user_ref.update({"audio": doc["audio"]})
+            # else:
+            #     user_ref.update({"audio": [{file.filename: destination_file_name}]})
         return {'message': 'Files uploaded successfully'}, 200
     else:
         print(u'No such document!')

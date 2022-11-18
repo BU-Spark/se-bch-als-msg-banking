@@ -1,0 +1,67 @@
+
+/* root table width */
+#root {
+    --width-table: 700px;
+}
+
+.original-audio {
+    /* 1x2 table*/
+    display: table;
+    /* center */
+    margin: 0 auto;
+    width: var(--width-table);
+}
+.original-audio > div {
+    /* 1x2 table cell*/
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+
+.processed-audio {
+    /* 1X2 table*/
+    display: table;
+    /* center */
+    margin: 0 auto;
+    width: var(--width-table);
+}
+.processed-audio > div {
+    /* 1x2 table cell*/
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    /* margin*/
+    margin: 0;
+    padding: 0;
+    border: 1px solid #ccc;
+}
+.processed-audio-list {
+    /* a flex table nx1 */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+
+}
+.processed-clip {
+    border: 1px solid #ccc;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+.processed-clip-div {
+    /* 1x2 table */
+    display: table;
+    width: 100%;
+}
+.processed-clip-div > div {
+    /* 1x2 table cell */
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    border: 1px solid #ccc;
+    margin: 0;
+    padding: 0;
+}
