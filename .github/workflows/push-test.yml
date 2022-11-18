@@ -27,5 +27,6 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
+          npm install -g jest
           npm install -D jest-environment-jsdom
           npm test
