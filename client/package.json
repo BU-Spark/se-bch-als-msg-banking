@@ -67,9 +67,8 @@
       "../firebase": "<rootDir>/src/components/firebase.js"
     },
     "transformIgnorePatterns": [
-      "<rootDir>/node_modules/(?!firebase)",
-      "http://localhost/index.node.cjs.js",
-      "node_modules"
-    ]
+      "<rootDir>/node_modules/(?!(@firebase.*)/)"
+    ],
+    "resolver": "<rootDir>/myModuleResolver.js"
   }
 }
