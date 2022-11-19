@@ -8,7 +8,6 @@ from google.cloud import storage
 import os
 import datetime
 from flask import Flask, request, jsonify
-from flask_cors import CORS
 from google.cloud import firestore
 import google.auth.transport.requests
 from google.oauth2 import id_token
@@ -208,40 +207,72 @@ def retrieve_audio():
     print("Generated GET signed URL:")
     return url
 
-@app.route('/delete_audio', methods=['DELETE'])
-def delete_audio():
-    try:
-        app.logger.info("logging working")
-        cloud_storage_filename = request.json['cloudStorageFileName']
-        
-        # delete the audio from cloud storage
-        blob = bucket.blob(cloud_storage_filename)
-        blob.delete()
+@app.route('/delete_unprocessed_audio', methods=['DELETE'])
+def delete_unprocessed_audio():
+    # get request data
+    cloud_storage_filename = request.json['cloudStorageFileName']
+    auth_header = request.json['Authorization']
 
-        # delete the audio from firebase
-        # firestore_filename = request.json['fireStoreFilename']
-        auth_header = request.json['Authorization']
-        idtoken = auth_header.split(' ').pop()
-        claims = id_token.verify_firebase_token(
-            idtoken, HTTP_REQUEST, audience=os.environ.get('GOOGLE_CLOUD_PROJECT'))
-        user_ref = users_collection.document(claims['sub'])
+    # delete the unprocessed audio from cloud storage
+    blob = bucket.blob(cloud_storage_filename)
+    blob.delete()
 
-        doc = user_ref.get()
-        if doc.exists:        
-            doc = doc.to_dict()
-            new_audios = []
-            for audio in doc["audio"]:
-                if list(audio.values())[0] != cloud_storage_filename:
-                    new_audios.append(audio)
-            user_ref.update({'audio': new_audios})
-            return doc
+    # delete the audio from firebase, and the associated processed audios from cloud storage
+    idtoken = auth_header.split(' ').pop()
+    claims = id_token.verify_firebase_token(
+        idtoken, HTTP_REQUEST, audience=os.environ.get('GOOGLE_CLOUD_PROJECT'))
+    user_ref = users_collection.document(claims['sub'])
 
-        else:
-            print(u'No such document!')
+    doc = user_ref.get()
+    if doc.exists:        
+        doc = doc.to_dict()
+        new_audios = []
+        for audio in doc["audio"]:
+            if cloud_storage_filename not in list(audio.values()):
+                new_audios.append(audio)
+            else:
+                # delete the processed audios from cloud storage
+                for processed_audio in audio["processed"]:
+                    blob = bucket.blob(processed_audio)
+                    blob.delete()
 
-    except Exception as e:
-        app.logger.error('THERE IS AN EXCEPTION:', str(e))
-        return str(e)
+        user_ref.update({'audio': new_audios})
+        return {'message': 'File deleted successfully'}, 200
+
+    else:
+        print(u'No such document!')
+        return {'message': 'No such document'}, 400 
+
+@app.route('/delete_processed_audio', methods=['DELETE'])
+def delete_processed_audio():
+    # get request data
+    cloud_storage_filename = request.json['cloudStorageFileName']
+    auth_header = request.json['Authorization']
+
+    # delete the unprocessed audio from cloud storage
+    blob = bucket.blob(cloud_storage_filename)
+    blob.delete()
+
+    # delete the audio from firebase, and the associated processed audios from cloud storage
+    idtoken = auth_header.split(' ').pop()
+    claims = id_token.verify_firebase_token(
+        idtoken, HTTP_REQUEST, audience=os.environ.get('GOOGLE_CLOUD_PROJECT'))
+    user_ref = users_collection.document(claims['sub'])
+
+    doc = user_ref.get()
+    if doc.exists:        
+        doc = doc.to_dict()
+        for audio in doc["audio"]:
+            if cloud_storage_filename in audio['processed']:
+                audio['processed'].remove(cloud_storage_filename)
+
+        user_ref.update({'audio': doc['audio']})
+        return {'message': 'File deleted successfully'}, 200
+
+    else:
+        print(u'No such document!')
+        return {'message': 'No such document'}, 400
+
 
     
 port = int(os.environ.get('PORT', 8080))
