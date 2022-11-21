@@ -1,0 +1,4 @@
+// Reference: https://forum.codewithmosh.com/t/7-social-tests-still-referenceerror-regeneratorruntime-is-not-defined-resolved/1978
+{
+    "plugins": ["@babel/plugin-transform-runtime"]
+}

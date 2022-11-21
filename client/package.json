@@ -8,20 +8,21 @@
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.24.0",
     "bootstrap": "^5.1.3",
-    "firebase": "^9.4.0",
+    "firebase": "^9.5.0-20211017215430",
     "react": "^17.0.2",
     "react-bootstrap": "^2.0.0",
     "react-dom": "^17.0.2",
     "react-firebase-hooks": "^4.0.1",
     "react-router-dom": "^5.3.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^4.0.3",
     "styled-components": "^5.3.3",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest --env=jsdom --colors --coverage test",
+    "jest": "jest --env=jsdom --colors --coverage test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -41,5 +42,32 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "babel-core": "^7.0.0-bridge.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.7",
+    "regenerator-runtime": "^0.13.10"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-class-properties"
+    ]
+  },
+  "jest": {
+    "verbose": false,
+    "moduleNameMapper": {
+      "\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/mocks/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/src/mocks/fileMock.js",
+      "../firebase": "<rootDir>/src/components/firebase.js"
+    },
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/(?!(@firebase.*)/)"
+    ],
+    "resolver": "<rootDir>/myModuleResolver.js"
   }
 }

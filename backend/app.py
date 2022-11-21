@@ -8,7 +8,6 @@ from google.cloud import storage
 import os
 import datetime
 from flask import Flask, request, jsonify
-from flask_cors import CORS
 from google.cloud import firestore
 import google.auth.transport.requests
 from google.oauth2 import id_token
@@ -175,10 +174,10 @@ def upload_audios():
                 blob = bucket.blob(dest_processed_file)
                 blob.upload_from_filename(path, content_type='audio/wav')
                 if "audio" in doc:
-                    doc["audio"].append({processedFileName: dest_processed_file})
+                    doc["audio"].append({processedFileName: destination_file_name, "processed": {dest_processed_file}})
                     user_ref.update({"audio": doc["audio"]})
                 else:
-                    user_ref.update({"audio": [{processedFileName: dest_processed_file}]})
+                    user_ref.update({"audio": [{processedFileName: destination_file_name, "processed "+ destination_file_name: {dest_processed_file}}]})
                     doc = user_ref.get()
                     doc = doc.to_dict()
             # if "audio" in doc:
@@ -208,7 +207,74 @@ def retrieve_audio():
     print("Generated GET signed URL:")
     return url
 
+@app.route('/delete_unprocessed_audio', methods=['DELETE'])
+def delete_unprocessed_audio():
+    # get request data
+    cloud_storage_filename = request.json['cloudStorageFileName']
+    auth_header = request.json['Authorization']
 
+    # delete the unprocessed audio from cloud storage
+    blob = bucket.blob(cloud_storage_filename)
+    blob.delete()
+
+    # delete the audio from firebase, and the associated processed audios from cloud storage
+    idtoken = auth_header.split(' ').pop()
+    claims = id_token.verify_firebase_token(
+        idtoken, HTTP_REQUEST, audience=os.environ.get('GOOGLE_CLOUD_PROJECT'))
+    user_ref = users_collection.document(claims['sub'])
+
+    doc = user_ref.get()
+    if doc.exists:        
+        doc = doc.to_dict()
+        new_audios = []
+        for audio in doc["audio"]:
+            if cloud_storage_filename not in list(audio.values()):
+                new_audios.append(audio)
+            else:
+                # delete the processed audios from cloud storage
+                for processed_audio in audio["processed"]:
+                    blob = bucket.blob(processed_audio)
+                    blob.delete()
+
+        user_ref.update({'audio': new_audios})
+        return {'message': 'File deleted successfully'}, 200
+
+    else:
+        print(u'No such document!')
+        return {'message': 'No such document'}, 400 
+
+@app.route('/delete_processed_audio', methods=['DELETE'])
+def delete_processed_audio():
+    # get request data
+    cloud_storage_filename = request.json['cloudStorageFileName']
+    auth_header = request.json['Authorization']
+
+    # delete the unprocessed audio from cloud storage
+    blob = bucket.blob(cloud_storage_filename)
+    blob.delete()
+
+    # delete the audio from firebase, and the associated processed audios from cloud storage
+    idtoken = auth_header.split(' ').pop()
+    claims = id_token.verify_firebase_token(
+        idtoken, HTTP_REQUEST, audience=os.environ.get('GOOGLE_CLOUD_PROJECT'))
+    user_ref = users_collection.document(claims['sub'])
+
+    doc = user_ref.get()
+    if doc.exists:        
+        doc = doc.to_dict()
+        for audio in doc["audio"]:
+            if cloud_storage_filename in audio['processed']:
+                audio['processed'].remove(cloud_storage_filename)
+
+        user_ref.update({'audio': doc['audio']})
+        return {'message': 'File deleted successfully'}, 200
+
+    else:
+        print(u'No such document!')
+        return {'message': 'No such document'}, 400
+
+
+    
 port = int(os.environ.get('PORT', 8080))
 if __name__ == '__main__':
-    app.run(threaded=True, host='0.0.0.0', port=port)
+    app.run(threaded=True, host='0.0.0.0', port=port, debug=True)
