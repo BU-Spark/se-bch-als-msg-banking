@@ -92,6 +92,7 @@ function Retrieve() {
             <div>{res[0][0]}</div>
             <div>{res[0][1]}</div>
             <button onClick={() => downloadClip(res[0][1])}>Download</button>
+            <button onClick={() => deleteUnprocessedAudio(res[0][0])}>Delete</button>
           </div>
           <div className="processed-audio">
             <div>{res[1][0]}</div>
@@ -107,6 +108,7 @@ function Retrieve() {
             <div>{res[1][0]}</div>
             <div>{res[1][1]}</div>
             <button onClick={() => downloadClip(res[1][1])}>Download</button>
+            <button onClick={() => deleteUnprocessedAudio(res[1][0])}>Delete</button>
           </div>
           <div className="processed-audio">
             <div><p>{res[0][0]}</p></div>
@@ -121,24 +123,27 @@ function Retrieve() {
   // </div>
   });
   function showList(list) {
-    // return a list of divs, that contain the audio file
+    // return a list of divs, that contain the processed audio files
+    if (list.length === 0) {
+      return <div>No processed audio files</div>;
+    }
     var list = list.map((value) => {
       return (
         <div className="processed-clip-div">
           <div className="processed-clip">{value}</div>
           <button onClick={() => downloadClip(value)}>Download</button>
+          <button onClick={() => deleteProcessedAudio(value)}>Delete</button>
         </div>
       );
     });
     return list;
   }
-
+  //<button onClick={() => deleteProcessedAudio('Audiob4858236-67ac-11ed-b1c9-0242ac110002.wav')}>test button</button>
   return (
     <>
       <h1 className="dashboard-header text-center">Rediscover Your Voice</h1>
       <h2 className="dashboard-header text-center">Click to Download!</h2>
       <br />
-      <button onClick={() => deleteProcessedAudio('Audiob4858236-67ac-11ed-b1c9-0242ac110002.wav')}>test button</button>
       <div className="col-md-12 text-center">{audioList}</div>
     </>
   );
