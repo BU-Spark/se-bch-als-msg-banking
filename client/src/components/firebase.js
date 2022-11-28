@@ -94,7 +94,7 @@ const signInWithGoogle = async () => {
       const response = await axios.post(
         url + "/register",
         {
-          audio: {},
+          audio: [],
           uid: user.uid,
           name: user.displayName,
           authProvider: "google",
