@@ -5,5 +5,7 @@ google-auth
 google-cloud-firestore
 google-cloud-storage
 pydub
+ffprobe
+ffmpeg
 webrtcvad
 
