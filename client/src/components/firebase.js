@@ -53,7 +53,7 @@ const registerWithEmailAndPassword = async (name, email, password) => {
       const response = await axios.post(
         url + "/register",
         { 
-          audio: {},
+          audio: [],
           uid: user.uid,
           name: name,
           authProvider: "email",
@@ -94,7 +94,7 @@ const signInWithGoogle = async () => {
       const response = await axios.post(
         url + "/register",
         {
-          audio: {},
+          audio: [],
           uid: user.uid,
           name: user.displayName,
           authProvider: "google",
@@ -125,7 +125,7 @@ const signInWithFacebook = async () => {
         url + "/register",
         {
           uid: user.uid,
-          audio: {},
+          audio: [],
           name: user.displayName,
           authProvider: "facebook",
           email: user.email,
