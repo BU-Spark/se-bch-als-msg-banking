@@ -126,7 +126,7 @@ function Upload() {
       console.log('Uploaded One File');
     await axios({
       method: "post",
-      url: url + "/upload_audio",
+      url: url + "/upload_audios",
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
