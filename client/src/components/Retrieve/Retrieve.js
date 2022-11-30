@@ -84,41 +84,48 @@ function Retrieve() {
     }
   };
 
+
 var unprocessedList = audio.map((value) => {
-  // const res = Object.entries(value.unprocessed);
     return(
       <div>
         <div className="original-audio">
-          <div>{value.unprocessed.map(inner=>(
-            <div>
-             {inner.name}
-             <button className="button" onClick={() => downloadClip(inner.key)}>Download</button>
-             <button className="button" onClick={() => deleteUnprocessedAudio(inner.key)}>Delete</button>
-            </div>
+          <div>{Object.keys(value).map(inner=> {
+            let db_name = value[inner];
+            if ("processed" === inner) {
+              return;
+            }
+            return (
+              <div>
+                <div>{inner}</div>            
+                <button className="button" onClick={() => downloadClip(db_name)}>Download</button>
+                <button className="button" onClick={() => deleteUnprocessedAudio(db_name)}>Delete</button>
+              </div>
+            )
+          }
           )
-          )
-          }</div>
+          }
+          </div>
         </div>       
       </div>);
   } 
 );
 
 var processedList = audio.map((value) => {
-    return(
-      <div>
-        <div className="processed-audio">
-          <div>{value.processed.map(inner=>(
-            <div>
-             {inner.name}
-             <button className="button" onClick={() => downloadClip(inner.key)}>Download</button>
-             <button className="button" onClick={() => deleteUnprocessedAudio(inner.key)}>Delete</button>
-             </div>
-          )
-          )
-          }</div>
-        </div>       
-      </div>);
-  }
+  return(
+    <div>
+      <div className="processed-audio">
+        <div>{value.processed.map(inner=>(
+          <div>
+           {inner}
+           <button className="button" onClick={() => downloadClip(inner)}>Download</button>
+           <button className="button" onClick={() => deleteProcessedAudio(inner)}>Delete</button>
+           </div>
+        )
+        )
+        }</div>
+      </div>       
+    </div>);
+}
 );
 
   const Collapsible = ({index}) =>{
