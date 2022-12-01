@@ -6,7 +6,8 @@ import axios from "axios";
 import "./Retrieve.css";
 import useCollapse from 'react-collapsed';
 
-const url=require('../settings')
+
+const url = require('../settings')
 
 function Retrieve() {
   const [user, loading] = useAuthState(auth);
@@ -37,7 +38,7 @@ function Retrieve() {
   const downloadClip = async (name) => {
     try {
       const response = await axios.post(
-        (url+"/retrieve_audio"),
+        (url + "/retrieve_audio"),
         {
           fileName: name,
         }
@@ -49,9 +50,10 @@ function Retrieve() {
   };
   const deleteUnprocessedAudio = async (cloudStorageFileName) => {
     try {
+      console.log(cloudStorageFileName)
       const token = await auth.currentUser.getIdToken();
       const response = await axios.delete(
-        (url+"/delete_unprocessed_audio"),
+        (url + "/delete_unprocessed_audio"),
         {
           'data': {
             'cloudStorageFileName': cloudStorageFileName,
@@ -69,7 +71,7 @@ function Retrieve() {
     try {
       const token = await auth.currentUser.getIdToken();
       const response = await axios.delete(
-        (url+"/delete_processed_audio"),
+        (url + "/delete_processed_audio"),
         {
           'data': {
             'cloudStorageFileName': cloudStorageFileName,
@@ -85,77 +87,127 @@ function Retrieve() {
   };
 
 
-var unprocessedList = audio.map((value) => {
-    return(
+  var unprocessedList = audio.map((value) => {
+    return (
       <div>
-        <div className="original-audio">
-          <div>{Object.keys(value).map(inner=> {
+        <div className="unprocessed-audio">
+          <div>{Object.keys(value).map(inner => {
             let db_name = value[inner];
             if ("processed" === inner) {
               return;
             }
             return (
               <div>
-                <div>{inner}</div>            
-                <button className="button" onClick={() => downloadClip(db_name)}>Download</button>
-                <button className="button" onClick={() => deleteUnprocessedAudio(db_name)}>Delete</button>
+                {inner}
               </div>
             )
           }
           )
           }
           </div>
-        </div>       
+        </div>
       </div>);
-  } 
-);
+  }
+  );
 
-var processedList = audio.map((value) => {
-  return(
-    <div>
-      <div className="processed-audio">
-        <div>{value.processed.map(inner=>(
-          <div>
-           {inner}
-           <button className="button" onClick={() => downloadClip(inner)}>Download</button>
-           <button className="button" onClick={() => deleteProcessedAudio(inner)}>Delete</button>
-           </div>
-        )
-        )
-        }</div>
-      </div>       
-    </div>);
-}
-);
+  var processedList = audio.map((value) => {
+    return (
+      <div>
+        <div className="processed-audio">
+          <div>{value.processed.map(inner => (
+            <div>
+              {inner}
+              <button className="button" onClick={() => downloadClip(inner)}>Download</button>
+              <button className="button" onClick={() => deleteProcessedAudio(inner)}>Delete</button>
+            </div>
+          )
+          )
+          }</div>
+        </div>
+      </div>);
+  }
+  );
 
-  const Collapsible = ({index}) =>{
+
+
+  const Collapsible = ({ index }) => {
     const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
     return (
-        <div className="collapsible">
-            <div className="header" {...getToggleProps()}>
-                {(isExpanded ? '▼':'▶')}
-                {unprocessedList[index]}
-                </div>
-            <div {...getCollapseProps()}>
-                <div className="content">
-                  {processedList[index]}                   
-                </div>
-            </div>
-        </div>
-        );
-    }
+      <div className="collapsible">
+        <div className="header" {...getToggleProps()}>
+          <table>
+            <tbody>
+            <tr align="right">
+              <td>{(isExpanded ? '▼' : '▶')} {unprocessedList[index]}</td>
+            </tr>
+            </tbody>
+          </table>
 
+        </div>
+        <div {...getCollapseProps()}>
+          <div className="content">
+            {processedList[index]}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+
+//   const clickhandler = (audio_name)=>{
+//     downloadClip(audio_name);
+//  }
 
   return (
     <>
       <h1 className="dashboard-header text-center">Rediscover Your Voice</h1>
       <h2 className="dashboard-header text-center">Click to Download!</h2>
-      <br />
-      {
-        audio.map((_,index)=>{
-          return <Collapsible index={index}/>
+      <table>
+        <thead>
+          <tr>
+            <th className="uk-table-shrink">Name</th>
+            <th>Files</th>
+            <th>Date</th>
+            <th colspan="2" align="right">Actions</th>
+          </tr>
+          
+        </thead>
+
+        {audio.map((value, index) => {
+          var db_name = "";
+          var audio_name = "";
+          db_name = Object.keys(value).map(inner => {
+            // let db = inner; //audio name
+            let db = value[inner];  //database name
+            if ("processed" === inner) {
+              return false; // skip
+            }         
+            else {return db;}                     
+          });
+          
+          db_name.forEach(element => {
+            if (element !== false){
+              db_name = element;  
+            }
+          });
+   
+          return (
+            <tbody>
+            <tr align="right">
+              <td><Collapsible index={index} /> </td>
+              <td align="right">    {}     </td>
+              <td align="right"> {}</td>
+              <td align="right">  <button className="button" onClick={() => downloadClip(db_name)}>Download</button> </td>
+              {/* <td align="right">  <button className="button" onClick={clickhandler()}>Download</button> </td> */}
+              <td aligb = "left"> <button className="button" onClick={() => deleteUnprocessedAudio(db_name)}>Delete</button> </td>
+
+            </tr>
+            </tbody>
+          );
         })
-      }     
+        }
+
+      </table>
     </>
   );
 }
