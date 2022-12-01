@@ -210,6 +210,10 @@ def delete_unprocessed_audio():
     cloud_storage_filename = request.json['cloudStorageFileName']
     auth_header = request.json['Authorization']
 
+    # delete the audio from cloud storage
+    blob = bucket.blob(cloud_storage_filename)
+    blob.delete()
+
     # delete the audio from firebase, and the associated processed audios from cloud storage
     idtoken = auth_header.split(' ').pop()
     claims = id_token.verify_firebase_token(
@@ -242,7 +246,7 @@ def delete_processed_audio():
     cloud_storage_filename = request.json['cloudStorageFileName']
     auth_header = request.json['Authorization']
 
-    # delete the unprocessed audio from cloud storage
+    # delete the audio from cloud storage
     blob = bucket.blob(cloud_storage_filename)
     blob.delete()
 
