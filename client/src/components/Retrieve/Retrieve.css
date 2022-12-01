@@ -16,7 +16,7 @@
     display: table-cell;
     vertical-align: middle;
     text-align: center;
-    border: 1px solid #ccc;
+    border: 0px solid #ccc;
 }
 
 .processed-audio {
@@ -79,12 +79,12 @@
     border-radius: 50%;
   }
 .collapsible .content {
-    padding: 6px;
+    padding: 1px;
     background-color: white;
 }
 .collapsible .header {
     background-color: #dddddd;
-    padding: 6px;
+    padding: 1px;
     cursor: pointer;
     width: 80%;
 }
