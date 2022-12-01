@@ -219,10 +219,17 @@ def delete_unprocessed_audio():
     doc = user_ref.get()
     if doc.exists:
         doc = doc.to_dict()
+        new_audios = []
         for audio in doc["audio"]:
-            if cloud_storage_filename in audio:
-                doc["audio"].remove(audio)
-                user_ref.update({"audio": doc["audio"]})
+            if cloud_storage_filename not in list(audio.values()):
+                new_audios.append(audio)
+            else:
+                # delete the processed audios from cloud storage
+                for processed_audio in audio["processed"]:
+                    blob = bucket.blob(processed_audio)
+                    blob.delete()
+
+        user_ref.update({'audio': new_audios})
         return {'message': "Success"}, 200
     else:
         print(u'No such document!')
