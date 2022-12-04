@@ -14,6 +14,20 @@
 }
 
 
+.th {
+  border: 1px solid black;
+  text-align: center;
+}
+.table:hover { background-color: white; }
+
+.table{
+    pointer-events: none;
+}
+.table-first-col{
+    width: 70%;
+    overflow: hidden;
+}
+
 .processed-audio {
     /* 1X2 table*/
     display: table;
