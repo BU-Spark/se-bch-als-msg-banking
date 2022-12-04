@@ -157,6 +157,7 @@ def upload_audios():
         return 'Unauthorized', 401
     user_ref = users_collection.document(claims['sub'])
     doc = user_ref.get()
+    # return {str(doc)}, 200
     if doc.exists:
         doc = doc.to_dict()
         for file in files:
@@ -170,16 +171,24 @@ def upload_audios():
             # upload processed audio
             for path in processedFilePaths:
                 dest_processed_file = f'Audio{uuid.uuid1()}.wav'
-                processedFileName = path.split('/tmp/')[1]
+                originalFileName = path.split('/tmp/')[1]
                 blob = bucket.blob(dest_processed_file)
                 blob.upload_from_filename(path, content_type='audio/wav')
+                created = False
                 if "audio" in doc:
-                    doc["audio"].append({processedFileName: destination_file_name, "processed": {dest_processed_file}})
+                    # check if file already exists
+                    for audio in doc["audio"]:
+                        # temp = destination_file_name + " | " + str(list(audio.values()))
+                        # return {'data':  temp}, 200
+                        if destination_file_name in str(list(audio.values())):
+                            created = True
+                            # return {'data':  audio["processed"]}, 200
+                            audio["processed"].append(dest_processed_file)
+                    if not created:
+                        doc["audio"].append({originalFileName: destination_file_name, "processed": [dest_processed_file]})
                     user_ref.update({"audio": doc["audio"]})
                 else:
-                    user_ref.update({"audio": [{processedFileName: destination_file_name, "processed "+ destination_file_name: {dest_processed_file}}]})
-                    doc = user_ref.get()
-                    doc = doc.to_dict()
+                    user_ref.update({"audio": [{originalFileName: destination_file_name, "processed": [dest_processed_file]}]})
         return {'message': 'Files uploaded successfully'}, 200
     else:
         print(u'No such document!')
