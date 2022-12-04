@@ -21,8 +21,8 @@ def deadSpace(filePath):
     
     sample_rate = 48000
 
-    prepPath = '/tmp/' + re.split('.wav|.WAV', (filePath.split('/tmp/')[1]))[0] + 'Edited.WAV'
-
+    #prepPath = '/tmp/' + re.split('.wav|.WAV', (filePath.split('/tmp/')[1]))[0] + 'Edited.WAV' # the original way that append "Edited" each chunk
+    prepPath = '/tmp/' + re.split('.wav|.WAV', (filePath.split('/tmp/')[1]))[0] + '.WAV'
     # Preparation of wav file for vad function
     # pySeg = AudioSegment.from_wav(filePath).set_channels(1).set_frame_rate(sample_rate).export(prepPath, format='wav')
     pySeg = AudioSegment.from_file(filePath).set_channels(1).set_frame_rate(sample_rate).export(prepPath, format='wav')
