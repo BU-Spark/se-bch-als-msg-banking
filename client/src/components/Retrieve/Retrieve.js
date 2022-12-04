@@ -146,7 +146,6 @@ function Retrieve() {
         console.log('Response from delete audio:');
         console.log(response);
         removeLoading();
-
         window.location.reload(false);
       }
       )
@@ -156,8 +155,10 @@ function Retrieve() {
       removeLoading();
     }
   };
+
   const deleteProcessedAudio = async (cloudStorageFileName) => {
     try {
+      showLoading();
       const token = await auth.currentUser.getIdToken();
       const response = await axios.delete(
         (url + "/delete_processed_audio"),
@@ -167,11 +168,16 @@ function Retrieve() {
             'Authorization': token
           }
         }
-      );
-      console.log('Response from delete audio:');
-      console.log(response)
+      ).then( response => {
+        console.log('Response from delete audio:');
+        console.log(response);
+        removeLoading();
+        window.location.reload(false);
+      }
+      )
     } catch (err) {
       console.log(err);
+      removeLoading();
     }
   };
 
@@ -278,8 +284,8 @@ function Retrieve() {
             <tbody>
               <tr align="right">
                 <td className = "table-first-col"><Collapsible index={index} /> </td>
-                <td align="right">    {1}     </td>
-                <td align="right"> {1}</td>
+                <td align="right">    {"-"}     </td>
+                <td align="right"> {"-"}</td>
                 <td align="right">  <button className="button" onClick={() => downloadClip(db_name)}>Download</button> </td>
                 {/* <td aligb = "left"> <button className="button" onClick={() => deleteUnprocessedAudio(db_name)}>Delete</button> </td> */}
                 <td > <button className="button" onClick={() => {deleteUnprocessedAudio(db_name);  }}>Delete</button> </td>
