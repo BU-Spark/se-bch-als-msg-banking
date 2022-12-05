@@ -25,9 +25,9 @@ function Home() {
       <Hero></Hero>
       <Intro></Intro>
       <HowTo></HowTo>
-      <h2 className="home-header text-center">FOOT SECTION</h2>
+      {/* <h2 className="home-header text-center">FOOT SECTION</h2>
       <h3 className="home-header text-center">Rediscover Your Voice</h3>
-      <h3 className="home-header text-center">ALS Voice Editing</h3>
+      <h3 className="home-header text-center">ALS Voice Editing</h3> */}
     </>
   );
 }
