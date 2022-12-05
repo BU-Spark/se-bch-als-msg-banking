@@ -9,15 +9,17 @@ import "./Dashboard.css";
 import { Card, CardActionArea, CardContent, Grid, Typography, Paper, Container, Box } from "@mui/material"
 import { makeStyles } from "@mui/styles";
 import { createTheme, ThemeProvider } from "@mui/system";
+import icon_upload from "../assets/icon_upload.png";
+import icon_download from "../assets/icon_download.png";
 
 const useStyles = makeStyles((theme) => ({
   section: {
-      height: "80vh",
+      height: "78vh",
       // height: "500px",
       // position: "relative",  
   },
   container: {
-      height: "100%",
+      height: "50%",
       // maxWidth: "xl",
   },
   gridRoot: {
@@ -25,11 +27,6 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     direction: "row",
     alignItems: "center",
-    justifyContent: "center",
-  },
-  heroImage: {
-  //   height: "100%",
-    width: "100%",
     justifyContent: "center",
   },
 }));
@@ -73,7 +70,7 @@ function Dashboard() {
 
   return (
     <>
-      <h1 className="dashboard-header text-center">Rediscover Your Voice</h1>
+      {/* <h1 className="dashboard-header text-center">Rediscover Your Voice</h1>
       <h2 className="dashboard-header text-center">ALS Voice Editing</h2>
       <br />
       <div class="col-md-12 text-center">
@@ -95,38 +92,65 @@ function Dashboard() {
         <div>{name}</div>
         <div>{user?.email}</div>
         <Button onClick={logout}>Logout</Button>
-      </div>
+      </div> */}
 
 
-      {/* <Paper className={styles.section}>
+      {/* <Typography variant="h7">logged in as:</Typography>
+      <br/> */}
+      <Typography variant="h7" color="#79797a">{name}</Typography>
+      <br/>
+      <Typography variant="h7" color="#79797a">{user?.email}</Typography>   
+      <Paper className={styles.section}>
             <Container className={styles.container}>
+                <Typography variant="h2" textAlign="center" pt={5} color="#0C3282" fontWeight={700}>Dashboard</Typography>
                 <Grid container className={styles.gridRoot}>
-                    <Grid item md={6} >
-                      <Card>
+                    <Grid item md={5.5}>
+                      <Card style={{backgroundColor: "#F5F5F6"}}>
                         <CardActionArea href={process.env.PUBLIC_URL + "/Upload"}>
                           <CardContent>
-                            <Typography variant="h5" textAlign="center">UPLOAD</Typography>
+                            {/* <Grid container alignItems= "center"> */}
+                            <Grid container>
+                              <Grid item xs={4} border={0} pt={5} align="center">
+                                <img src={icon_upload} width="50%"></img>
+                              </Grid>
+                              <Grid item xs={8} border={0} pt={5} pb={5}>
+                                <Typography variant="h5" pb={1}>UPLOAD</Typography>
+                                <Typography variant="h7">- Upload your .wav audio files</Typography>
+                                <br/>
+                                <Typography variant="h7">- Wait for audio processing</Typography>
+                                <br/>
+                                <Typography variant="h7">- And it's done</Typography>
+                              </Grid>
+                            </Grid>
                           </CardContent>
                         </CardActionArea>
                       </Card>
                     </Grid>
-                    <Grid item md={6} >
-                      <Card>
+                    <Grid item md={0.5}></Grid>
+                    <Grid item md={5.5}>
+                      <Card style={{backgroundColor: "#F5F5F6"}}>
                         <CardActionArea href={process.env.PUBLIC_URL + "/retrieve"}>
                           <CardContent>
-                            <Typography variant="h5" textAlign="center">RETRIEVE</Typography>
+                            <Grid container>
+                              <Grid item xs={4} border={0} pt={5} align="center">
+                                <img src={icon_download} width="50%"></img>
+                              </Grid>
+                              <Grid item xs={8} border={0} pt={5} pb={5}>
+                                <Typography variant="h5" pb={1}>RETRIEVE</Typography>
+                                <Typography variant="h7">- View your your audio banking</Typography>
+                                <br/>
+                                <Typography variant="h7">- See your processed audios</Typography>
+                                <br/>
+                                <Typography variant="h7">- Click to download your voice clips</Typography>
+                              </Grid>
+                            </Grid>
                           </CardContent>
                         </CardActionArea>
                       </Card>
                     </Grid>
                 </Grid>
-                <Typography variant="h7" textAlign="center">logged in as:</Typography>
-                <br/>
-                <Typography variant="h7" textAlign="center">{name}</Typography>
-                <br/>
-                <Typography variant="h7" textAlign="center">{user?.email}</Typography>
             </Container>
-      </Paper> */}
+      </Paper>
     </>
   );
 }
