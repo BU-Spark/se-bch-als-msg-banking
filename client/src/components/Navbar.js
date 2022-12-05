@@ -11,10 +11,10 @@ import { useAuthState } from "react-firebase-hooks/auth";
 function MainNav() {
   const Styles = styled.div`
     .navbar-custom {
-      background-color: #eef5db;
+      background-color: #0C3282;
     }
     .navbar-light .nav-link {
-      color: #2ca6a4;
+      color: white;
       &:hover {
         color: black;
       }
