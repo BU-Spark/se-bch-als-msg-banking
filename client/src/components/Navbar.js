@@ -16,7 +16,7 @@ function MainNav() {
     .navbar-light .nav-link {
       color: white;
       &:hover {
-        color: black;
+        color: #eeeb31;
       }
     }
   `;
@@ -50,7 +50,7 @@ function MainNav() {
           <Container>
             <Navbar.Brand
               href="https://www.childrenshospital.org/"
-              style={{ color: "#1b4079" }}
+              style={{ color: "white" }}
             >
               <Image src={BCHlogo} alt="Logo" />
               ALS Message Editing
