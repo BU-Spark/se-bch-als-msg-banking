@@ -178,11 +178,8 @@ def upload_audios():
                 if "audio" in doc:
                     # check if file already exists
                     for audio in doc["audio"]:
-                        # temp = destination_file_name + " | " + str(list(audio.values()))
-                        # return {'data':  temp}, 200
                         if destination_file_name in str(list(audio.values())):
                             created = True
-                            # return {'data':  audio["processed"]}, 200
                             audio["processed"].append(dest_processed_file)
                     if not created:
                         doc["audio"].append({originalFileName: destination_file_name, "processed": [dest_processed_file]})
