@@ -4,7 +4,10 @@ import { useHistory } from "react-router";
 import { auth, db } from "../firebase";
 import axios from "axios";
 import "./Retrieve.css";
-const url=require('../settings')
+import useCollapse from 'react-collapsed';
+
+
+const url = require('../settings')
 
 function Retrieve() {
   const [user, loading] = useAuthState(auth);
@@ -32,10 +35,92 @@ function Retrieve() {
     if (!user) return history.replace(process.env.PUBLIC_URL + "/");
     fetchUserAudio();
   }, [loading]);
+  function showLoading() {
+    if (document.getElementById("divLoadingFrame") != null) {
+      return;
+    }
+    var style = document.createElement("style");
+    style.id = "styleLoadingWindow";
+    style.innerHTML = `
+          .loading-frame {
+              position: fixed;
+              background-color: rgba(0, 0, 0, 0.8);
+              left: 0;
+              top: 0;
+              right: 0;
+              bottom: 0;
+              z-index: 4;
+          }
+  
+          .loading-track {
+              height: 50px;
+              display: inline-block;
+              position: absolute;
+              top: calc(50% - 50px);
+              left: 50%;
+          }
+  
+          .loading-dot {
+              height: 5px;
+              width: 5px;
+              background-color: white;
+              border-radius: 100%;
+              opacity: 0;
+          }
+  
+          .loading-dot-animated {
+              animation-name: loading-dot-animated;
+              animation-direction: alternate;
+              animation-duration: .75s;
+              animation-iteration-count: infinite;
+              animation-timing-function: ease-in-out;
+          }
+  
+          @keyframes loading-dot-animated {
+              from {
+                  opacity: 0;
+              }
+  
+              to {
+                  opacity: 1;
+              }
+          }
+      `
+    document.body.appendChild(style);
+    var frame = document.createElement("div");
+    frame.id = "divLoadingFrame";
+    frame.classList.add("loading-frame");
+    for (var i = 0; i < 10; i++) {
+      var track = document.createElement("div");
+      track.classList.add("loading-track");
+      var dot = document.createElement("div");
+      dot.classList.add("loading-dot");
+      track.style.transform = "rotate(" + String(i * 36) + "deg)";
+      track.appendChild(dot);
+      frame.appendChild(track);
+    }
+    document.body.appendChild(frame);
+    var wait = 0;
+    var dots = document.getElementsByClassName("loading-dot");
+    // There was a warning i is already defined, thus use j for index instead.
+    for (var j = 0; j < dots.length; j++) {
+      window.setTimeout(function(dot) {
+        dot.classList.add("loading-dot-animated");
+      }, wait, dots[j]);
+      wait += 150;
+    }
+  };
+
+  function removeLoading() {
+    document.body.removeChild(document.getElementById("divLoadingFrame"));
+    document.body.removeChild(document.getElementById("styleLoadingWindow"));
+  };
+
+
   const downloadClip = async (name) => {
     try {
       const response = await axios.post(
-        (url+"/retrieve_audio"),
+        (url + "/retrieve_audio"),
         {
           fileName: name,
         }
@@ -47,104 +132,170 @@ function Retrieve() {
   };
   const deleteUnprocessedAudio = async (cloudStorageFileName) => {
     try {
+      showLoading();
       const token = await auth.currentUser.getIdToken();
       const response = await axios.delete(
-        (url+"/delete_unprocessed_audio"),
+        (url + "/delete_unprocessed_audio"),
         {
           'data': {
             'cloudStorageFileName': cloudStorageFileName,
             'Authorization': token
           }
         }
-      );
-      console.log('Response from delete audio:');
-      console.log(response)
+      ).then( response => {
+        console.log('Response from delete audio:');
+        console.log(response);
+        removeLoading();
+        window.location.reload(false);
+      }
+      )
+
     } catch (err) {
       console.log(err);
+      removeLoading();
     }
   };
+
   const deleteProcessedAudio = async (cloudStorageFileName) => {
     try {
+      showLoading();
       const token = await auth.currentUser.getIdToken();
       const response = await axios.delete(
-        (url+"/delete_processed_audio"),
+        (url + "/delete_processed_audio"),
         {
           'data': {
             'cloudStorageFileName': cloudStorageFileName,
             'Authorization': token
           }
         }
-      );
-      console.log('Response from delete audio:');
-      console.log(response)
+      ).then( response => {
+        console.log('Response from delete audio:');
+        console.log(response);
+        removeLoading();
+        window.location.reload(false);
+      }
+      )
     } catch (err) {
       console.log(err);
+      removeLoading();
     }
   };
-  var audioList = audio.map((value) => {
-    const res = Object.entries(value);
-    console.log(`res: ${res}`);
-    console.log(res);
-    if(res[1][0] === "processed"){
-      return (
-        <div>
-          <div className="original-audio">
-            <div>{res[0][0]}</div>
-            <div>{res[0][1]}</div>
-            <button onClick={() => downloadClip(res[0][1])}>Download</button>
-            <button onClick={() => deleteUnprocessedAudio(res[0][0])}>Delete</button>
-          </div>
-          <div className="processed-audio">
-            <div>{res[1][0]}</div>
-            <div>{showList(res[1][1])}</div>
-          </div>
-        </div>
-      );
-    }
-    else {
-      return (
-        <div>
-          <div className="original-audio">
-            <div>{res[1][0]}</div>
-            <div>{res[1][1]}</div>
-            <button onClick={() => downloadClip(res[1][1])}>Download</button>
-            <button onClick={() => deleteUnprocessedAudio(res[1][0])}>Delete</button>
-          </div>
-          <div className="processed-audio">
-            <div><p>{res[0][0]}</p></div>
-            <div className="processed-audio-list">{showList(res[0][1])}</div>
+
+
+  var unprocessedList = audio.map((value) => {
+    return (
+      <div>
+        <div className="unprocessed-audio">
+          <div>{Object.keys(value).map(inner => {
+            let db_name = value[inner];
+            if ("processed" === inner) {
+              return;
+            }
+            return (
+              <div>
+                {inner}
+              </div>
+            )
+          }
+          )
+          }
           </div>
         </div>
-      );
-    }
-    
-  //   <div className="download-btn">
-  //   <button onClick={() => downloadClip(res[0][1])}>Download</button>
-  // </div>
-  });
-  function showList(list) {
-    // return a list of divs, that contain the processed audio files
-    if (list.length === 0) {
-      return <div>No processed audio files</div>;
-    }
-    var list = list.map((value) => {
-      return (
-        <div className="processed-clip-div">
-          <div className="processed-clip">{value}</div>
-          <button onClick={() => downloadClip(value)}>Download</button>
-          <button onClick={() => deleteProcessedAudio(value)}>Delete</button>
-        </div>
-      );
-    });
-    return list;
+      </div>);
   }
-  //<button onClick={() => deleteProcessedAudio('Audiob4858236-67ac-11ed-b1c9-0242ac110002.wav')}>test button</button>
+  );
+
+  var processedList = audio.map((value) => {
+    return (
+      <div>
+        <div className="processed-audio">
+          <div>{value.processed.map(inner => (
+            <div>
+              {inner}
+              <button className="button" onClick={() => downloadClip(inner)}>Download</button>
+              <button className="button" onClick={() => deleteProcessedAudio(inner)}>Delete</button>
+            </div>
+          )
+          )
+          }</div>
+        </div>
+      </div>);
+  }
+  );
+
+
+
+  const Collapsible = ({ index }) => {
+    const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
+    return (
+      <div className="collapsible">
+        <div className="header" {...getToggleProps()}>
+          <table>
+            <tbody>
+            <tr align="right">
+              <td>{(isExpanded ? '▼' : '▶')} {unprocessedList[index]}</td>
+            </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <div {...getCollapseProps()}>
+          <div className="content">
+            {processedList[index]}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+
+
   return (
     <>
       <h1 className="dashboard-header text-center">Rediscover Your Voice</h1>
-      <h2 className="dashboard-header text-center">Click to Download!</h2>
-      <br />
-      <div className="col-md-12 text-center">{audioList}</div>
+      <table>
+        <thead>
+          <tr>
+            <th align="center"> Name </th>
+            <th> Files </th>
+            <th> Date </th>
+            <th colspan="2"> Actions </th>
+          </tr>        
+        </thead>
+
+        {audio.map((value, index) => {
+          var db_name = "";
+          db_name = Object.keys(value).map(inner => {
+            // let db = inner; //audio name
+            let db = value[inner];  //database name
+            if ("processed" === inner) {
+              return false; // skip
+            }         
+            else {return db;}                     
+          });
+          
+          db_name.forEach(element => {
+            if (element !== false){
+              db_name = element;  
+            }
+          });
+   
+          return (
+            <tbody>
+              <tr align="right">
+                <td className = "table-first-col"><Collapsible index={index} /> </td>
+                <td align="right">    {"-"}     </td>
+                <td align="right"> {"-"}</td>
+                <td align="right">  <button className="button" onClick={() => downloadClip(db_name)}>Download</button> </td>
+                {/* <td aligb = "left"> <button className="button" onClick={() => deleteUnprocessedAudio(db_name)}>Delete</button> </td> */}
+                <td > <button className="button" onClick={() => {deleteUnprocessedAudio(db_name);  }}>Delete</button> </td>
+            </tr>
+            </tbody>
+          );
+        })
+        }
+
+      </table>
     </>
   );
 }

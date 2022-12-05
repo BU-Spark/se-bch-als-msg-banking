@@ -157,6 +157,7 @@ def upload_audios():
         return 'Unauthorized', 401
     user_ref = users_collection.document(claims['sub'])
     doc = user_ref.get()
+    # return {str(doc)}, 200
     if doc.exists:
         doc = doc.to_dict()
         for file in files:
@@ -170,16 +171,21 @@ def upload_audios():
             # upload processed audio
             for path in processedFilePaths:
                 dest_processed_file = f'Audio{uuid.uuid1()}.wav'
-                processedFileName = path.split('/tmp/')[1]
+                originalFileName = path.split('/tmp/')[1]
                 blob = bucket.blob(dest_processed_file)
                 blob.upload_from_filename(path, content_type='audio/wav')
+                created = False
                 if "audio" in doc:
-                    doc["audio"].append({processedFileName: destination_file_name, "processed": {dest_processed_file}})
+                    # check if file already exists
+                    for audio in doc["audio"]:
+                        if destination_file_name in str(list(audio.values())):
+                            created = True
+                            audio["processed"].append(dest_processed_file)
+                    if not created:
+                        doc["audio"].append({originalFileName: destination_file_name, "processed": [dest_processed_file]})
                     user_ref.update({"audio": doc["audio"]})
                 else:
-                    user_ref.update({"audio": [{processedFileName: destination_file_name, "processed "+ destination_file_name: {dest_processed_file}}]})
-                    doc = user_ref.get()
-                    doc = doc.to_dict()
+                    user_ref.update({"audio": [{originalFileName: destination_file_name, "processed": [dest_processed_file]}]})
         return {'message': 'Files uploaded successfully'}, 200
     else:
         print(u'No such document!')
@@ -210,6 +216,10 @@ def delete_unprocessed_audio():
     cloud_storage_filename = request.json['cloudStorageFileName']
     auth_header = request.json['Authorization']
 
+    # delete the audio from cloud storage
+    blob = bucket.blob(cloud_storage_filename)
+    blob.delete()
+
     # delete the audio from firebase, and the associated processed audios from cloud storage
     idtoken = auth_header.split(' ').pop()
     claims = id_token.verify_firebase_token(
@@ -219,10 +229,17 @@ def delete_unprocessed_audio():
     doc = user_ref.get()
     if doc.exists:
         doc = doc.to_dict()
+        new_audios = []
         for audio in doc["audio"]:
-            if cloud_storage_filename in audio:
-                doc["audio"].remove(audio)
-                user_ref.update({"audio": doc["audio"]})
+            if cloud_storage_filename not in list(audio.values()):
+                new_audios.append(audio)
+            else:
+                # delete the processed audios from cloud storage
+                for processed_audio in audio["processed"]:
+                    blob = bucket.blob(processed_audio)
+                    blob.delete()
+
+        user_ref.update({'audio': new_audios})
         return {'message': "Success"}, 200
     else:
         print(u'No such document!')
@@ -235,7 +252,7 @@ def delete_processed_audio():
     cloud_storage_filename = request.json['cloudStorageFileName']
     auth_header = request.json['Authorization']
 
-    # delete the unprocessed audio from cloud storage
+    # delete the audio from cloud storage
     blob = bucket.blob(cloud_storage_filename)
     blob.delete()
 

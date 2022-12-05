@@ -104,11 +104,12 @@ gcloud run deploy api-dev \
 
 ### Next Steps
 
+- Create different user types, with support for different user permissions
+  - Motivation: so patients and caretakers can both upload/manage files on behalf of the patient
+  - Suggested direction
+    - Currently, the ERD of the system looks as follows: [link](https://excalidraw.com/#json=-LCSG-ShDmak9AprUI9LT,zhR7TQiJovH9fbLHI2MJsA)
+    - A modification of the database and user flow to follow this general guideline would allow for these features to be built, as this would allow both patients and caretakers to upload/retrieve from the same document within the newly created collections: [link](https://excalidraw.com/#json=21EzZvSgTpRM558zRtxWx,e5qdQqTUEmp2myNCfwgo-g)
 - Develop additional audio processing features: 
   - Background noise reduction
   - Improve the clarity of slurred subject voice
-- Other features: 
-  - Folder layout in processed files pages
-  - User is able to delete processed files
   - User input in trimming/splitting process
-
