@@ -143,8 +143,6 @@ function Retrieve() {
           }
         }
       ).then( response => {
-        console.log('Response from delete audio:');
-        console.log(response);
         removeLoading();
         window.location.reload(false);
       }
@@ -169,8 +167,6 @@ function Retrieve() {
           }
         }
       ).then( response => {
-        console.log('Response from delete audio:');
-        console.log(response);
         removeLoading();
         window.location.reload(false);
       }
