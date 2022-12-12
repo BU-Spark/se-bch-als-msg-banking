@@ -95,6 +95,7 @@ gcloud run deploy api-dev \
 - Background noise reduction:
   - Attempted to use python's noisereduce library for background noise, but the library distorsts the voice in the audio file, which affects the dead space trimmer/splitter function.
   - Dolby API has superior background noise reduction capabilities, but requires funding. Client is deciding whether they would like to use it or not.
+- @mui/styles is a legacy library
 
 ## Known Bugs and Future Steps
 
