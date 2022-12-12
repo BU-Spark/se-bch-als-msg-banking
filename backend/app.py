@@ -209,10 +209,12 @@ def retrieve_audio():
 @app.route('/delete_unprocessed_audio', methods=['DELETE'])
 def delete_unprocessed_audio():
     # In firebase, under audio, there is a list of uploaded audio,
-    # each uploaded audio has two entries: the original audio file name and "processed".
+    # each uploaded audio has two entries: the original audio file name and an array with the key "processed".
     # The original audio file is by itself like "name":"address", 
-    # while the "processed" is a list containing the names of the processed audio files like "processed":"[address1, address2, address2]".
+    # while the "processed" is a list containing the addresses of the processed audio files like "processed":"[address1, address2, address2]".
+    # This function is for deleting a processed audio file, along with all of its unprocessed counterparts.
     
+    # get request data
     cloud_storage_filename = request.json['cloudStorageFileName']
     auth_header = request.json['Authorization']
 
@@ -248,6 +250,12 @@ def delete_unprocessed_audio():
 
 @app.route('/delete_processed_audio', methods=['DELETE'])
 def delete_processed_audio():
+    # In firebase, under audio, there is a list of uploaded audio,
+    # each uploaded audio has two entries: the original audio file name and an array with the key "processed".
+    # The original audio file is by itself like "name":"address", 
+    # while the "processed" is a list containing the addresses of the processed audio files like "processed":"[address1, address2, address2]".
+    # This function is for deleting a single processed audio file.
+
     # get request data
     cloud_storage_filename = request.json['cloudStorageFileName']
     auth_header = request.json['Authorization']
