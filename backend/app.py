@@ -213,9 +213,16 @@ def delete_unprocessed_audio():
     # The original audio file is by itself like "name":"address", 
     # while the "processed" is a list containing the addresses of the processed audio files like "processed":"[address1, address2, address2]".
     # This function is for deleting a processed audio file, along with all of its unprocessed counterparts.
+    # For an example of how to call this route, see client/src/components/Retrieve/Retrieve.js, there is a function deleteUnprocessedAudio
     
     # get request data
+
+    # the address of the audio file in google cloud storage. So, in the firebase for a given audio file this is the structure
+    # {filename: address, processed: [address1, address2, ...]}
+    # cloud_storage_filename is 'address' in this example
     cloud_storage_filename = request.json['cloudStorageFileName']
+
+    # the authorization header allowing the backend to access the firebase
     auth_header = request.json['Authorization']
 
     # delete the audio from cloud storage
@@ -255,9 +262,16 @@ def delete_processed_audio():
     # The original audio file is by itself like "name":"address", 
     # while the "processed" is a list containing the addresses of the processed audio files like "processed":"[address1, address2, address2]".
     # This function is for deleting a single processed audio file.
+    # For an example of how to call this route, see client/src/components/Retrieve/Retrieve.js, there is a function deleteProcessedAudio
 
     # get request data
+
+    # the address of the audio file in google cloud storage. So, in the firebase for a given audio file this is the structure
+    # {filename: address, processed: [address1, address2, ...]}
+    # cloud_storage_filename can be 'address1' or 'address2 in this example
     cloud_storage_filename = request.json['cloudStorageFileName']
+
+    # the authorization header allowing the backend to access the firebase
     auth_header = request.json['Authorization']
 
     # delete the audio from cloud storage
