@@ -58,8 +58,7 @@ function Dashboard() {
       }
     };
     fetchUserName();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, loading]);
+  }, [user, loading, history]);
 
   const theme = createTheme({
     typography: {
