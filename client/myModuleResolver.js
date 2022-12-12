@@ -1,4 +1,6 @@
 // my-module-resolve.js
+/* there was a issue for jest yml running on Github action,
+and this was one of the solutions: https://github.com/firebase/firebase-js-sdk/issues/5687*/
 module.exports = (request, options) => {
     // Call the defaultResolver, so we leverage its cache, error handling, etc.
     return options.defaultResolver(request, {
