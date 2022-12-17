@@ -28,46 +28,48 @@ function Login() {
       </div>
       <div className="login">
         <div className="login__container">
-          <input
+          {/* !!! log in with username and other methods temporarily deprecated until security issue is resolve. */}
+          
+          {/* <input
             type="text"
             className="login__textBox"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="E-mail Address"
-          />
-          <input
+          /> */}
+          {/* <input
             type="password"
             className="login__textBox"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-          />
-          <button
+          /> */}
+          {/* <button
             className="login__btn"
             onClick={() => signInWithEmailAndPassword(email, password)}
           >
             Login
-          </button>
+          </button> */}
           <button
             className="login__btn login__google"
             onClick={signInWithGoogle}
           >
             Login with Google
           </button>
-          <button
+          {/* <button
             className="login__btn login__facebook"
             onClick={signInWithFacebook}
             style={{ textDecoration: "line-through" }}
           >
             Login with Facebook
-          </button>
-          <div>
+          </button> */}
+          {/* <div>
             <Link to={process.env.PUBLIC_URL + "/reset"}>Forgot Password</Link>
           </div>
           <div>
             Don't have an account? Click here to{" "}
             <Link to={process.env.PUBLIC_URL + "/register"}>Register</Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

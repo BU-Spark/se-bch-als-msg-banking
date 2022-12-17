@@ -21,8 +21,8 @@ def deadSpace(filePath):
     
     sample_rate = 48000
 
-    prepPath = '/tmp/' + re.split('.wav|.WAV', (filePath.split('/tmp/')[1]))[0] + 'Edited.WAV'
-
+    #prepPath = '/tmp/' + re.split('.wav|.WAV', (filePath.split('/tmp/')[1]))[0] + 'Edited.WAV' # the original way that append "Edited" each chunk
+    prepPath = '/tmp/' + re.split('.wav|.WAV', (filePath.split('/tmp/')[1]))[0] + '.WAV'
     # Preparation of wav file for vad function
     # pySeg = AudioSegment.from_wav(filePath).set_channels(1).set_frame_rate(sample_rate).export(prepPath, format='wav')
     pySeg = AudioSegment.from_file(filePath).set_channels(1).set_frame_rate(sample_rate).export(prepPath, format='wav')
@@ -40,7 +40,8 @@ def deadSpace(filePath):
 
     # Writes voice audio chunks + appends valid files
     for i, segment in enumerate(segments):
-        path = prepPath.split('.WAV')[0] + 'chunk-'+ str(i) + '.WAV'
+        path = prepPath.split('.WAV')[0] + 'chunk-'+ str(i) + '.WAV' # the original way that indexes each chunk
+        # path = prepPath.split('.WAV')[0] + '.WAV'
         print(' Writing %s' % (path))
         vadfuncs.write_wave(path, segment, sample_rate)
 

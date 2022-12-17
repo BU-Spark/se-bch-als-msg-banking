@@ -11,12 +11,12 @@ import { useAuthState } from "react-firebase-hooks/auth";
 function MainNav() {
   const Styles = styled.div`
     .navbar-custom {
-      background-color: #eef5db;
+      background-color: #0C3282;
     }
     .navbar-light .nav-link {
-      color: #2ca6a4;
+      color: white;
       &:hover {
-        color: black;
+        color: #eeeb31;
       }
     }
   `;
@@ -50,7 +50,7 @@ function MainNav() {
           <Container>
             <Navbar.Brand
               href="https://www.childrenshospital.org/"
-              style={{ color: "#1b4079" }}
+              style={{ color: "white" }}
             >
               <Image src={BCHlogo} alt="Logo" />
               ALS Message Editing

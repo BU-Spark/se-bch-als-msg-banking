@@ -3,6 +3,12 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useHistory } from "react-router";
 import { auth } from "../firebase";
 import "./Home.css";
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid'
+import Hero from "./Hero";
+import Intro from "./Intro";
+import HowTo from "./HowTo";
+
 
 function Home() {
   const [user, loading] = useAuthState(auth);
@@ -16,8 +22,12 @@ function Home() {
   }, [user, loading]);
   return (
     <>
-      <h1 className="home-header text-center">Rediscover Your Voice</h1>
-      <h2 className="home-header text-center">ALS Voice Editing</h2>
+      <Hero></Hero>
+      <Intro></Intro>
+      <HowTo></HowTo>
+      {/* <h2 className="home-header text-center">FOOT SECTION</h2>
+      <h3 className="home-header text-center">Rediscover Your Voice</h3>
+      <h3 className="home-header text-center">ALS Voice Editing</h3> */}
     </>
   );
 }

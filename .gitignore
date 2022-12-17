@@ -4,7 +4,7 @@
 */__pycache__
 */tmp
 package-lock.json
-settings.js
 serviceaccount.json
-client/src/components/settings.js
+*/coverage
+client/package-lock.json
 client/src/components/settings.js

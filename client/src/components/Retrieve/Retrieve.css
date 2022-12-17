@@ -4,19 +4,28 @@
     --width-table: 700px;
 }
 
-.original-audio {
+.unprocessed-audio {
     /* 1x2 table*/
     display: table;
     /* center */
     margin: 0 auto;
-    width: var(--width-table);
+    width: 100%;
+    border: none;
 }
-.original-audio > div {
-    /* 1x2 table cell*/
-    display: table-cell;
-    vertical-align: middle;
+
+
+table th{
     text-align: center;
-    border: 1px solid #ccc;
+    padding: 16px;
+}
+.table:hover { background-color: white; }
+
+.table{
+    pointer-events: none;
+}
+.table-first-col{
+    width: 70%;
+    overflow: hidden;
 }
 
 .processed-audio {
@@ -24,44 +33,27 @@
     display: table;
     /* center */
     margin: 0 auto;
-    width: var(--width-table);
+    width: 90%;
 }
-.processed-audio > div {
-    /* 1x2 table cell*/
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-    /* margin*/
-    margin: 0;
-    padding: 0;
-    border: 1px solid #ccc;
-}
-.processed-audio-list {
-    /* a flex table nx1 */
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin: 0;
-    padding: 0;
 
+.button {
+    background-color: #436397;
+    border: none;
+    color: white;
+    padding: 7px;
+    text-align: match-parent;
+    text-decoration: none;
+    display: display-outside;
+    font-size: 16px;
+    margin: 4px 2px;
+    border-radius: 10%;
+  }
+.collapsible .content {
+    padding: 1px;
+    background-color: white;
 }
-.processed-clip {
-    border: 1px solid #ccc;
-    margin: 0;
-    padding: 0;
-    height: 100%;
-}
-.processed-clip-div {
-    /* 1x2 table */
-    display: table;
+.collapsible .header {
+    background-color: white;
+    padding: 1px;
     width: 100%;
-}
-.processed-clip-div > div {
-    /* 1x2 table cell */
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-    border: 1px solid #ccc;
-    margin: 0;
-    padding: 0;
 }

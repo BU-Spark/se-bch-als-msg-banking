@@ -1,9 +1,9 @@
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics, isSupported } from "firebase/analytics";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import axios from "axios";
-import { sendEmailVerification } from "firebase/auth";
+import { getAuth,sendEmailVerification, signInWithPopup } from "firebase/auth";
 const url=require('./settings')
 
 const firebaseConfig = {
@@ -17,9 +17,11 @@ const firebaseConfig = {
 };
 
 const app = firebase.initializeApp(firebaseConfig);
-const auth = app.auth();
+// ignore next line for jest tests
+// const auth = app.auth(); // This used to be the old way but will be thrown errors in jest tests
+const auth = getAuth(app);
 const db = app.firestore();
-const analytics = getAnalytics(app);
+const analytics = isSupported().then(yes => yes ? getAnalytics(app) : null); // const analytics = getAnalytics(app);
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 const facebookProvider = new firebase.auth.FacebookAuthProvider();
 
@@ -47,11 +49,11 @@ const registerWithEmailAndPassword = async (name, email, password) => {
     res.user.getIdTokenResult().then(async (idTokenResult) => {
       const user = res.user;
       const token = "Bearer " + idTokenResult.token;
-      console.log(token);
+      //console.log(token);
       const response = await axios.post(
         url + "/register",
         { 
-          audio: {},
+          audio: [],
           uid: user.uid,
           name: name,
           authProvider: "email",
@@ -84,15 +86,15 @@ const sendPasswordResetEmail = async (email) => {
 
 const signInWithGoogle = async () => {
   try {
-    const res = await auth.signInWithPopup(googleProvider);
+    const res = await signInWithPopup(auth, googleProvider);
     res.user.getIdTokenResult().then(async (idTokenResult) => {
       const user = res.user;
       const token = "Bearer " + idTokenResult.token;
-      console.log(token);
+      //console.log(token);
       const response = await axios.post(
         url + "/register",
         {
-          audio: {},
+          audio: [],
           uid: user.uid,
           name: user.displayName,
           authProvider: "google",
@@ -114,16 +116,16 @@ const signInWithGoogle = async () => {
 };
 
 const signInWithFacebook = async () => {
-  try {    const res = await auth.signInWithPopup(facebookProvider);
+  try {    const res = await signInWithPopup(auth, facebookProvider);
     res.user.getIdTokenResult().then(async (idTokenResult) => {
       const user = res.user;
       const token = "Bearer " + idTokenResult.token;
-      console.log(token);
+      //console.log(token);
       const response = await axios.post(
         url + "/register",
         {
           uid: user.uid,
-          audio: {},
+          audio: [],
           name: user.displayName,
           authProvider: "facebook",
           email: user.email,

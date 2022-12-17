@@ -95,6 +95,7 @@ gcloud run deploy api-dev \
 - Background noise reduction:
   - Attempted to use python's noisereduce library for background noise, but the library distorsts the voice in the audio file, which affects the dead space trimmer/splitter function.
   - Dolby API has superior background noise reduction capabilities, but requires funding. Client is deciding whether they would like to use it or not.
+- @mui/styles is a legacy library
 
 ## Known Bugs and Future Steps
 
@@ -104,11 +105,17 @@ gcloud run deploy api-dev \
 
 ### Next Steps
 
+- Create different user types, with support for different user permissions
+  - User types: caretaker/doctor, administrator, patient
+  - Motivation:
+    - So patients and caretakers can both upload/manage files on behalf of the patient.
+      - This is needed as the caretaker will have to eventually use the audio files to create the synthetic voice. So, allowing the caretaker to upload on behalf of patients would make the process more efficient as it would cut out the need for a patient to upload the audio files, re-download them, then send them to the caretaker
+    - Additionally, if a caretaker would like to manage files for multiple patients he/she can
+    - Also would allow the administrator to clean up old unused files/accounts to manage storage
+  - Suggested direction
+    - Currently, the ERD of the system looks as follows: [link](https://excalidraw.com/#json=-LCSG-ShDmak9AprUI9LT,zhR7TQiJovH9fbLHI2MJsA)
+    - A modification of the database and user flow to follow this general guideline would allow for these features to be built, as this would allow both patients and caretakers to upload/retrieve from the same document within the newly created collections: [link](https://excalidraw.com/#json=21EzZvSgTpRM558zRtxWx,e5qdQqTUEmp2myNCfwgo-g)
 - Develop additional audio processing features: 
   - Background noise reduction
   - Improve the clarity of slurred subject voice
-- Other features: 
-  - Folder layout in processed files pages
-  - User is able to delete processed files
   - User input in trimming/splitting process
-
